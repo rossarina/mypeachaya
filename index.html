@@ -19,6 +19,50 @@
     <!-- Balloon Container (populated by JS) -->
     <div id="balloon-container"></div>
 
+    <!-- ============================================================
+         QUIZ OVERLAY
+         แก้ไขคำถามและคำตอบได้ตรงนี้เลยครับ 👇
+    ============================================================ -->
+    <div id="quizOverlay" class="quiz-overlay">
+        <!-- ดาวและหัวใจประดับรอบๆ -->
+        <div class="quiz-deco d1">🌸</div>
+        <div class="quiz-deco d2">💕</div>
+        <div class="quiz-deco d3">✨</div>
+        <div class="quiz-deco d4">🌸</div>
+        <div class="quiz-deco d5">💫</div>
+        <div class="quiz-deco d6">🦋</div>
+
+        <div class="quiz-card">
+            <div class="quiz-top-emoji">💌</div>
+
+            <h2 class="quiz-title">ก่อนเปิดของขวัญ...</h2>
+            <p class="quiz-subtitle">ตอบคำถามนี้ให้ถูกก่อนนะ 🥰</p>
+
+            <!-- =========================================
+                 🔧 เปลี่ยนคำถามตรงนี้ 👇
+            ========================================= -->
+            <p class="quiz-question" id="quizQuestion">
+                "เราเจอกันครั้งแรกที่ไหน?"
+            </p>
+
+            <input
+                type="text"
+                id="quizInput"
+                class="quiz-input"
+                placeholder="พิมพ์คำตอบตรงนี้เลย..."
+                autocomplete="off"
+                spellcheck="false"
+            >
+
+            <p id="quizFeedback" class="quiz-feedback"></p>
+
+            <button id="quizSubmit" class="quiz-submit-btn">
+                ตรวจคำตอบ 💖
+            </button>
+        </div>
+    </div>
+
+
     <!-- Floating Photos (Jigsaw) -->
     <div id="photo-container">
         <div class="floating-photo" style="background-image: url('assets/images/pic1.jpg');"></div>

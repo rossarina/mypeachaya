@@ -1,4 +1,81 @@
+// ============================================================
+//  QUIZ CONFIG — แก้ไขคำถามและคำตอบตรงนี้ได้เลยครับ! 🔧
+// ============================================================
+const QUIZ_QUESTION = '"เราเจอกันครั้งแรกที่ไหน?"';
+//  ⬇️  ใส่คำตอบที่ถูกต้องตรงนี้ (พิมพ์เล็กหรือใหญ่ก็ตรวจได้):
+const QUIZ_ANSWER   = 'มหาวิทยาลัย';   // 🔧 เปลี่ยนตรงนี้!
+// ============================================================
+
 document.addEventListener('DOMContentLoaded', () => {
+
+    // ============================================================
+    // 0. QUIZ SCREEN — ต้องตอบถูกก่อนเข้าเว็บหลัก
+    // ============================================================
+    const quizOverlay  = document.getElementById('quizOverlay');
+    const quizInput    = document.getElementById('quizInput');
+    const quizSubmit   = document.getElementById('quizSubmit');
+    const quizFeedback = document.getElementById('quizFeedback');
+    const quizCard     = document.querySelector('.quiz-card');
+    const quizQuestion = document.getElementById('quizQuestion');
+
+    // Set question text from config
+    quizQuestion.textContent = QUIZ_QUESTION;
+
+    function checkAnswer() {
+        const userAnswer = quizInput.value.trim();
+
+        if (userAnswer === '') {
+            quizFeedback.textContent = 'กรุณาพิมพ์คำตอบก่อนนะ 🥺';
+            quizFeedback.className = 'quiz-feedback wrong';
+            return;
+        }
+
+        const isCorrect = userAnswer.toLowerCase() === QUIZ_ANSWER.toLowerCase();
+
+        if (isCorrect) {
+            // ✅ Correct!
+            quizFeedback.textContent = '🎉 ถูกต้องแล้ว! เข้ามาได้เลยนะ 💖';
+            quizFeedback.className = 'quiz-feedback correct';
+            quizSubmit.disabled = true;
+
+            // Fire confetti burst
+            confetti({
+                particleCount: 120,
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: ['#ff4081', '#ffd740', '#ea80fc', '#ff80ab', '#ffffff'],
+            });
+
+            // Fade out overlay after short delay
+            setTimeout(() => {
+                quizOverlay.classList.add('dismissed');
+            }, 900);
+
+        } else {
+            // ❌ Wrong — shake the card
+            quizFeedback.textContent = 'ยังไม่ถูกเลยนะ ลองใหม่อีกทีนะ 🙈';
+            quizFeedback.className = 'quiz-feedback wrong';
+
+            quizCard.classList.remove('shake');
+            // Force reflow so re-adding the class triggers the animation
+            void quizCard.offsetWidth;
+            quizCard.classList.add('shake');
+
+            // Clear input and refocus
+            quizInput.value = '';
+            quizInput.focus();
+        }
+    }
+
+    quizSubmit.addEventListener('click', (e) => {
+        e.stopPropagation();
+        checkAnswer();
+    });
+
+    // Allow pressing Enter to submit
+    quizInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') checkAnswer();
+    });
 
     // ============================================================
     // 1. CURSOR TRAIL (Sparkling Stars)
@@ -316,4 +393,4 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => el.remove(), 1500);
     });
 
-});
+}); // end DOMContentLoaded
