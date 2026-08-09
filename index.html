@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <!-- Google Fonts: Kanit -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Audio -->
+    <!-- นำไฟล์เพลงมาใส่ใน assets/music/ และเปลี่ยนชื่อไฟล์ด้านล่างนี้ให้ตรงกัน (เช่น hbd-song.mp3) -->
+    <audio id="bgMusic" src="assets/music/song.mp3" loop></audio>
+
+    <!-- Floating Photos (Jigsaw) -->
+    <!-- หากต้องการเพิ่มรูป ให้เพิ่ม <div class="floating-photo"> พร้อมเปลี่ยน url รูป -->
+    <div id="photo-container">
+        <div class="floating-photo" style="background-image: url('assets/images/pic1.jpg');"></div>
+        <div class="floating-photo" style="background-image: url('assets/images/pic2.jpg');"></div>
+        <div class="floating-photo" style="background-image: url('assets/images/pic3.jpg');"></div>
+        <div class="floating-photo" style="background-image: url('assets/images/pic4.jpg');"></div>
+        <div class="floating-photo" style="background-image: url('assets/images/pic5.jpg');"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Gift Box -->
+        <div class="gift-box" id="giftBox">
+            <div class="gift-lid"></div>
+            <div class="gift-body">
+                <div class="gift-ribbon-vertical"></div>
+                <div class="gift-ribbon-horizontal"></div>
+            </div>
+            <div class="gift-text">คลิกเพื่อเปิดของขวัญ 🎁</div>
+        </div>
+
+        <!-- Birthday Message (Hidden by default) -->
+        <div class="message-card hidden" id="messageCard">
+            <h1 id="hbd-title">Happy Birthday! 🎂</h1>
+            <p id="hbd-desc">ขอให้มีความสุขมากๆ นะคะ/ครับ 💕<br>รักที่สุดเลยยยย ✨</p>
+            <!-- คุณสามารถเปลี่ยนข้อความอวยพรได้ที่นี่ -->
+        </div>
+    </div>
+
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
