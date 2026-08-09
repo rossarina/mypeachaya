@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             messageCard.classList.add('show');
             // Typewriter on title
-            typeWriter(hbdTitle, 'Happy Birthday! 🎂', 70);
+            typeWriter(hbdTitle, 'Happy Birthday My Love! 🎂', 70);
         }, 20);
 
         fireConfetti();
