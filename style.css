@@ -9,18 +9,19 @@ body, html {
     height: 100%;
     overflow: hidden;
     font-family: 'Kanit', sans-serif;
-    /* โทนสีชมพูพาสเทล ไล่สี (Gradient) */
-    background: linear-gradient(135deg, #ffd1dc, #ffb6c1, #ffe4e1);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
+    /* พื้นหลังลวดลายจิ๊กซอว์ */
+    background-image: url('assets/images/bg-pattern.png');
+    background-size: 400px; 
+    background-repeat: repeat;
+    background-position: 0 0;
+    animation: panBackground 40s linear infinite;
     position: relative;
     user-select: none; /* Prevent text selection while dragging */
 }
 
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+@keyframes panBackground {
+    0% { background-position: 0 0; }
+    100% { background-position: 400px 400px; }
 }
 
 /* Container for all floating elements */
