@@ -159,6 +159,36 @@ body, html {
     clip-path: path('M 20,20 L 70,20 C 70,0 110,0 110,20 L 160,20 L 160,70 C 140,70 140,110 160,110 L 160,160 L 110,160 C 110,180 70,180 70,160 L 20,160 L 20,110 C 40,110 40,70 20,70 Z');
 }
 
+/* Piece 6: blank-top, tab-right, blank-bottom, tab-left */
+.floating-photo:nth-child(6) {
+    clip-path: path('M 20,20 L 70,20 C 70,40 110,40 110,20 L 160,20 L 160,70 C 180,70 180,110 160,110 L 160,160 L 110,160 C 110,140 70,140 70,160 L 20,160 L 20,110 C 0,110 0,70 20,70 Z');
+}
+
+/* Piece 7: tab-top, tab-right, tab-bottom, blank-left */
+.floating-photo:nth-child(7) {
+    clip-path: path('M 20,20 L 70,20 C 70,0 110,0 110,20 L 160,20 L 160,70 C 180,70 180,110 160,110 L 160,160 L 110,160 C 110,180 70,180 70,160 L 20,160 L 20,110 C 40,110 40,70 20,70 Z');
+}
+
+/* Piece 8: blank-top, blank-right, blank-bottom, tab-left */
+.floating-photo:nth-child(8) {
+    clip-path: path('M 20,20 L 70,20 C 70,40 110,40 110,20 L 160,20 L 160,70 C 140,70 140,110 160,110 L 160,160 L 110,160 C 110,140 70,140 70,160 L 20,160 L 20,110 C 0,110 0,70 20,70 Z');
+}
+
+/* Piece 9: tab-top, tab-right, blank-bottom, tab-left */
+.floating-photo:nth-child(9) {
+    clip-path: path('M 20,20 L 70,20 C 70,0 110,0 110,20 L 160,20 L 160,70 C 180,70 180,110 160,110 L 160,160 L 110,160 C 110,140 70,140 70,160 L 20,160 L 20,110 C 0,110 0,70 20,70 Z');
+}
+
+/* Piece 10: blank-top, tab-right, tab-bottom, tab-left */
+.floating-photo:nth-child(10) {
+    clip-path: path('M 20,20 L 70,20 C 70,40 110,40 110,20 L 160,20 L 160,70 C 180,70 180,110 160,110 L 160,160 L 110,160 C 110,180 70,180 70,160 L 20,160 L 20,110 C 0,110 0,70 20,70 Z');
+}
+
+/* Piece 11: tab-top, blank-right, tab-bottom, tab-left */
+.floating-photo:nth-child(11) {
+    clip-path: path('M 20,20 L 70,20 C 70,0 110,0 110,20 L 160,20 L 160,70 C 140,70 140,110 160,110 L 160,160 L 110,160 C 110,180 70,180 70,160 L 20,160 L 20,110 C 0,110 0,70 20,70 Z');
+}
+
 /* ========================================
    MAIN CONTAINER
 ======================================== */
