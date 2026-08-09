@@ -9,18 +9,25 @@ body, html {
     height: 100%;
     overflow: hidden;
     font-family: 'Kanit', sans-serif;
-    background-image: url('assets/images/bg-pattern.png');
-    background-size: 400px;
-    background-repeat: repeat;
-    background-position: 0 0;
-    animation: panBackground 40s linear infinite;
+    /* Gradient ชมพูพาสเทลสวยงาม ไล่สีไปมา */
+    background: linear-gradient(
+        135deg,
+        #fff0f5 0%,
+        #ffd6e7 25%,
+        #ffb3c6 50%,
+        #fce4ec 75%,
+        #fff0f5 100%
+    );
+    background-size: 400% 400%;
+    animation: gradientShift 14s ease infinite;
     position: relative;
     user-select: none;
 }
 
-@keyframes panBackground {
-    0%   { background-position: 0 0; }
-    100% { background-position: 400px 400px; }
+@keyframes gradientShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 /* ========================================
@@ -94,29 +101,62 @@ body, html {
     z-index: 1;
 }
 
+/* Jigsaw/Photo styles — shape via clip-path: path() */
+/* Each photo is 180x180; jigsaw tabs are ~20px protruding */
 .floating-photo {
     position: absolute;
-    width: 150px;
-    height: 150px;
+    width: 180px;
+    height: 180px;
     background-size: cover;
     background-position: center;
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.12);
-    border: 4px solid white;
     cursor: grab;
     pointer-events: auto;
-    transition: box-shadow 0.2s ease;
+    /* drop-shadow works with clip-path; box-shadow doesn't */
+    filter: drop-shadow(0 8px 16px rgba(255, 105, 180, 0.45));
+    transition: filter 0.2s ease;
     will-change: transform;
 }
 
 .floating-photo:hover {
-    box-shadow: 0 16px 32px rgba(255, 105, 180, 0.4);
+    filter: drop-shadow(0 14px 28px rgba(255, 64, 129, 0.6));
 }
 
 .floating-photo.dragging {
     cursor: grabbing;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    filter: drop-shadow(0 20px 36px rgba(255, 64, 129, 0.7));
     z-index: 100;
+}
+
+/* ── Jigsaw Clip-Path Shapes ──
+   Each piece is 180×180.
+   Corners at (20,20)→(160,160).
+   Tab = bezier curving OUT (to 0 or 180).
+   Blank = bezier curving IN (to 40 or 140).
+*/
+
+/* Piece 1: tab-top, tab-right, blank-bottom, blank-left */
+.floating-photo:nth-child(1) {
+    clip-path: path('M 20,20 L 70,20 C 70,0 110,0 110,20 L 160,20 L 160,70 C 180,70 180,110 160,110 L 160,160 L 110,160 C 110,140 70,140 70,160 L 20,160 L 20,110 C 40,110 40,70 20,70 Z');
+}
+
+/* Piece 2: blank-top, tab-right, tab-bottom, blank-left */
+.floating-photo:nth-child(2) {
+    clip-path: path('M 20,20 L 70,20 C 70,40 110,40 110,20 L 160,20 L 160,70 C 180,70 180,110 160,110 L 160,160 L 110,160 C 110,180 70,180 70,160 L 20,160 L 20,110 C 40,110 40,70 20,70 Z');
+}
+
+/* Piece 3: tab-top, blank-right, blank-bottom, tab-left */
+.floating-photo:nth-child(3) {
+    clip-path: path('M 20,20 L 70,20 C 70,0 110,0 110,20 L 160,20 L 160,70 C 140,70 140,110 160,110 L 160,160 L 110,160 C 110,140 70,140 70,160 L 20,160 L 20,110 C 0,110 0,70 20,70 Z');
+}
+
+/* Piece 4: blank-top, blank-right, tab-bottom, tab-left */
+.floating-photo:nth-child(4) {
+    clip-path: path('M 20,20 L 70,20 C 70,40 110,40 110,20 L 160,20 L 160,70 C 140,70 140,110 160,110 L 160,160 L 110,160 C 110,180 70,180 70,160 L 20,160 L 20,110 C 0,110 0,70 20,70 Z');
+}
+
+/* Piece 5: tab-top, blank-right, tab-bottom, blank-left */
+.floating-photo:nth-child(5) {
+    clip-path: path('M 20,20 L 70,20 C 70,0 110,0 110,20 L 160,20 L 160,70 C 140,70 140,110 160,110 L 160,160 L 110,160 C 110,180 70,180 70,160 L 20,160 L 20,110 C 40,110 40,70 20,70 Z');
 }
 
 /* ========================================

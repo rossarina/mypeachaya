@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     const photos    = document.querySelectorAll('.floating-photo');
     const photoData = [];
-    const photoSize = 150;
+    const photoSize = 180;
 
     photos.forEach(photo => {
         const x  = Math.random() * (window.innerWidth  - photoSize);
