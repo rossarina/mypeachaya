@@ -1,164 +1,319 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. Jigsaw/Photo Floating Logic ---
-    const photos = document.querySelectorAll('.floating-photo');
-    const photoData = [];
-    const photoSize = 150; // Match width/height in CSS
 
-    // Initialize random positions and speeds for each photo
-    photos.forEach(photo => {
-        const x = Math.random() * (window.innerWidth - photoSize);
-        const y = Math.random() * (window.innerHeight - photoSize);
-        const dx = (Math.random() - 0.5) * 2; // Random speed X
-        const dy = (Math.random() - 0.5) * 2; // Random speed Y
-        
-        photoData.push({
-            element: photo,
-            x: x,
-            y: y,
-            dx: dx,
-            dy: dy,
-            isDragging: false
+    // ============================================================
+    // 1. CURSOR TRAIL (Sparkling Stars)
+    // ============================================================
+    const canvas  = document.getElementById('trailCanvas');
+    const ctx     = canvas.getContext('2d');
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+
+    function Particle(x, y) {
+        this.x    = x;
+        this.y    = y;
+        this.size = Math.random() * 6 + 3;
+        this.alpha = 1;
+        this.dx   = (Math.random() - 0.5) * 3;
+        this.dy   = (Math.random() - 0.5) * 3 - 1;
+        const colors = ['#ff4081', '#ff80ab', '#ffd740', '#ff6ec7', '#ea80fc', '#ffffff'];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.shape = Math.random() > 0.5 ? 'star' : 'circle';
+    }
+
+    Particle.prototype.update = function() {
+        this.x     += this.dx;
+        this.y     += this.dy;
+        this.alpha -= 0.025;
+        this.size  *= 0.97;
+    };
+
+    Particle.prototype.draw = function() {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.alpha);
+        ctx.fillStyle   = this.color;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur  = 8;
+        if (this.shape === 'star') {
+            drawStar(ctx, this.x, this.y, 5, this.size, this.size / 2);
+        } else {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size / 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.restore();
+    };
+
+    function drawStar(ctx, cx, cy, spikes, outerR, innerR) {
+        let rot = (Math.PI / 2) * 3;
+        const step = Math.PI / spikes;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - outerR);
+        for (let i = 0; i < spikes; i++) {
+            ctx.lineTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR);
+            rot += step;
+            ctx.lineTo(cx + Math.cos(rot) * innerR, cy + Math.sin(rot) * innerR);
+            rot += step;
+        }
+        ctx.lineTo(cx, cy - outerR);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    function animateCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, i) => {
+            p.update();
+            p.draw();
+            if (p.alpha <= 0) particles.splice(i, 1);
         });
+        requestAnimationFrame(animateCanvas);
+    }
+    animateCanvas();
 
+    window.addEventListener('mousemove', (e) => {
+        for (let i = 0; i < 4; i++) {
+            particles.push(new Particle(e.clientX, e.clientY));
+        }
+    });
+
+
+    // ============================================================
+    // 2. FLOATING PHOTOS (Jigsaw) — Bounce + Drag & Drop
+    // ============================================================
+    const photos    = document.querySelectorAll('.floating-photo');
+    const photoData = [];
+    const photoSize = 150;
+
+    photos.forEach(photo => {
+        const x  = Math.random() * (window.innerWidth  - photoSize);
+        const y  = Math.random() * (window.innerHeight - photoSize);
+        const dx = (Math.random() - 0.5) * 1.5;
+        const dy = (Math.random() - 0.5) * 1.5;
+        photoData.push({ element: photo, x, y, dx, dy, isDragging: false });
         photo.style.transform = `translate(${x}px, ${y}px)`;
     });
 
-    // Animation Loop
     function animatePhotos() {
         photoData.forEach(data => {
-            if (data.isDragging) return; // Skip if user is dragging it
-
-            // Update position
+            if (data.isDragging) return;
             data.x += data.dx;
             data.y += data.dy;
-
-            // Bounce off walls
-            if (data.x <= 0 || data.x + photoSize >= window.innerWidth) {
-                data.dx *= -1;
-            }
-            if (data.y <= 0 || data.y + photoSize >= window.innerHeight) {
-                data.dy *= -1;
-            }
-
-            // Apply transform
+            if (data.x <= 0 || data.x + photoSize >= window.innerWidth)  data.dx *= -1;
+            if (data.y <= 0 || data.y + photoSize >= window.innerHeight) data.dy *= -1;
             data.element.style.transform = `translate(${data.x}px, ${data.y}px)`;
         });
-
         requestAnimationFrame(animatePhotos);
     }
     animatePhotos();
 
-    // --- 2. Drag and Drop Logic ---
-    let activeData = null;
-    let initialX, initialY, currentX, currentY;
+    let activeData = null, initX, initY;
 
-    photos.forEach((photo, index) => {
-        photo.addEventListener('pointerdown', (e) => {
-            // Bring to front handled by CSS :active z-index
-            activeData = photoData[index];
+    photos.forEach((photo, idx) => {
+        photo.addEventListener('pointerdown', e => {
+            activeData = photoData[idx];
             activeData.isDragging = true;
-            
-            initialX = e.clientX - activeData.x;
-            initialY = e.clientY - activeData.y;
-            
-            // Optional: stop event propagation so heart doesn't spawn when dragging photo
+            photo.classList.add('dragging');
+            initX = e.clientX - activeData.x;
+            initY = e.clientY - activeData.y;
             e.stopPropagation();
         });
     });
 
-    window.addEventListener('pointermove', (e) => {
+    window.addEventListener('pointermove', e => {
         if (!activeData) return;
-        
         e.preventDefault();
-        
-        currentX = e.clientX - initialX;
-        currentY = e.clientY - initialY;
-        
-        // Boundaries check (optional, but good for keeping photos in screen)
-        currentX = Math.max(0, Math.min(currentX, window.innerWidth - photoSize));
-        currentY = Math.max(0, Math.min(currentY, window.innerHeight - photoSize));
-        
-        activeData.x = currentX;
-        activeData.y = currentY;
-        activeData.element.style.transform = `translate(${currentX}px, ${currentY}px)`;
+        activeData.x = Math.max(0, Math.min(e.clientX - initX, window.innerWidth  - photoSize));
+        activeData.y = Math.max(0, Math.min(e.clientY - initY, window.innerHeight - photoSize));
+        activeData.element.style.transform = `translate(${activeData.x}px, ${activeData.y}px)`;
     });
 
     window.addEventListener('pointerup', () => {
         if (activeData) {
             activeData.isDragging = false;
+            activeData.element.classList.remove('dragging');
             activeData = null;
         }
     });
 
-    // --- 3. Gift Box Click & Confetti Logic ---
-    const giftBox = document.getElementById('giftBox');
-    const messageCard = document.getElementById('messageCard');
-    const bgMusic = document.getElementById('bgMusic');
 
-    giftBox.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent heart spawn on gift box click
-        
-        // Hide Gift Box
+    // ============================================================
+    // 3. BALLOONS — Spawn, Float Up, Pop on Click
+    // ============================================================
+    const balloonContainer = document.getElementById('balloon-container');
+    const balloonEmojis    = ['🎈', '🎀', '🎊', '🩷', '💗', '🌸', '🦋'];
+
+    function spawnBalloon() {
+        const b = document.createElement('div');
+        b.classList.add('balloon');
+        b.textContent  = balloonEmojis[Math.floor(Math.random() * balloonEmojis.length)];
+        b.style.left   = `${Math.random() * 90 + 5}%`;
+        b.style.setProperty('--duration', `${Math.random() * 5 + 7}s`);
+
+        b.addEventListener('pointerdown', e => {
+            e.stopPropagation();
+            b.classList.add('pop');
+            // Spawn mini confetti burst at balloon position
+            confetti({
+                particleCount: 40,
+                spread: 60,
+                origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight },
+                colors: ['#ff4081', '#ffd740', '#ea80fc', '#ff80ab'],
+                scalar: 0.8,
+                ticks: 50,
+            });
+            setTimeout(() => b.remove(), 400);
+        });
+
+        // Auto-remove when float animation ends
+        b.addEventListener('animationend', () => b.remove());
+        balloonContainer.appendChild(b);
+    }
+
+    // Spawn balloons periodically
+    spawnBalloon(); // immediate
+    setInterval(spawnBalloon, 2800);
+
+
+    // ============================================================
+    // 4. GIFT BOX — Click to Reveal + Confetti
+    // ============================================================
+    const giftBox     = document.getElementById('giftBox');
+    const messageCard = document.getElementById('messageCard');
+    const bgMusic     = document.getElementById('bgMusic');
+    const hbdTitle    = document.getElementById('hbd-title');
+    const hbdDesc     = document.getElementById('hbd-desc');
+
+    // Typewriter effect for the birthday message
+    function typeWriter(el, text, speed = 80) {
+        el.textContent = '';
+        let i = 0;
+        const interval = setInterval(() => {
+            el.textContent += text[i++];
+            if (i >= text.length) clearInterval(interval);
+        }, speed);
+    }
+
+    giftBox.addEventListener('click', e => {
+        e.stopPropagation();
         giftBox.classList.add('hidden');
-        
-        // Show Message Card
         messageCard.classList.remove('hidden');
-        // Small delay to allow display:block to render before transitioning opacity/transform
         setTimeout(() => {
             messageCard.classList.add('show');
-        }, 10);
-        
-        // Fire Confetti
+            // Typewriter on title
+            typeWriter(hbdTitle, 'Happy Birthday! 🎂', 70);
+        }, 20);
+
         fireConfetti();
-        
-        // Try playing background music (browsers require user interaction to play audio, which this is!)
-        bgMusic.play().catch(err => {
-            console.log("No music file found or playback blocked.", err);
+        bgMusic.play().catch(() => {});
+    });
+
+
+    // ============================================================
+    // 5. LOVE BUTTON — Heart explosion
+    // ============================================================
+    const loveBtn = document.getElementById('loveBtn');
+    loveBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        fireLoveHearts();
+        // Ripple from button
+        confetti({
+            particleCount: 80,
+            shapes: ['circle'],
+            colors: ['#ff4081', '#ff80ab', '#ffd740', '#ea80fc'],
+            origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight },
+            spread: 100,
+            startVelocity: 35,
         });
     });
 
-    function fireConfetti() {
-        var duration = 3 * 1000;
-        var animationEnd = Date.now() + duration;
-        var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-        function randomInRange(min, max) {
-            return Math.random() * (max - min) + min;
+    function fireLoveHearts() {
+        const heartEmojis = ['💖', '💕', '💗', '💝', '💓', '💞', '❤️', '🩷'];
+        for (let i = 0; i < 20; i++) {
+            setTimeout(() => {
+                const h = document.createElement('div');
+                h.classList.add('floating-heart');
+                h.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                h.style.left = `${Math.random() * 100}vw`;
+                h.style.top  = `${Math.random() * 80 + 10}vh`;
+                h.style.fontSize = `${Math.random() * 1.5 + 1}rem`;
+                document.body.appendChild(h);
+                setTimeout(() => h.remove(), 1500);
+            }, i * 60);
         }
-
-        var interval = setInterval(function() {
-            var timeLeft = animationEnd - Date.now();
-
-            if (timeLeft <= 0) {
-                return clearInterval(interval);
-            }
-
-            var particleCount = 50 * (timeLeft / duration);
-            // since particles fall down, start a bit higher than random
-            confetti(Object.assign({}, defaults, { particleCount,
-                origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
-            }));
-            confetti(Object.assign({}, defaults, { particleCount,
-                origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
-            }));
-        }, 250);
     }
 
-    // --- 4. Floating Heart Click Effect ---
-    document.body.addEventListener('pointerdown', (e) => {
-        // Create heart element
-        const heart = document.createElement('div');
-        heart.classList.add('floating-heart');
-        
-        // Set position to click coordinates
-        heart.style.left = `${e.clientX}px`;
-        heart.style.top = `${e.clientY}px`;
-        
-        document.body.appendChild(heart);
-        
-        // Remove after animation (1.5s)
-        setTimeout(() => {
-            heart.remove();
-        }, 1500);
+
+    // ============================================================
+    // 6. CONFETTI BUTTON (top-right)
+    // ============================================================
+    const confettiBtn = document.getElementById('confettiBtn');
+    confettiBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        fireConfetti();
     });
+
+    function fireConfetti() {
+        const duration   = 3500;
+        const endTime    = Date.now() + duration;
+        const defaults   = { spread: 360, ticks: 80, zIndex: 9998, startVelocity: 28 };
+
+        const interval = setInterval(() => {
+            const timeLeft = endTime - Date.now();
+            if (timeLeft <= 0) return clearInterval(interval);
+            const count = 55 * (timeLeft / duration);
+            confetti({ ...defaults, particleCount: count,
+                colors: ['#ff4081', '#ffd740', '#ea80fc', '#ff80ab', '#ffffff'],
+                origin: { x: Math.random() * 0.3 + 0.1, y: Math.random() - 0.2 } });
+            confetti({ ...defaults, particleCount: count,
+                colors: ['#ff4081', '#ffd740', '#ea80fc', '#ff80ab', '#ffffff'],
+                origin: { x: Math.random() * 0.3 + 0.6, y: Math.random() - 0.2 } });
+        }, 220);
+    }
+
+
+    // ============================================================
+    // 7. MUSIC TOGGLE BUTTON
+    // ============================================================
+    const musicBtn = document.getElementById('musicBtn');
+    let musicPlaying = false;
+
+    musicBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        if (musicPlaying) {
+            bgMusic.pause();
+            musicBtn.textContent = '🔇';
+        } else {
+            bgMusic.play().catch(() => {});
+            musicBtn.textContent = '🎵';
+        }
+        musicPlaying = !musicPlaying;
+    });
+
+
+    // ============================================================
+    // 8. CLICK ANYWHERE — Random Emoji Float Up
+    // ============================================================
+    const clickEmojis = ['💖', '✨', '🌸', '💕', '⭐', '🦋', '🌟', '💫'];
+
+    document.body.addEventListener('pointerdown', e => {
+        // Don't spawn on interactive elements
+        if (e.target.closest('.gift-box, .floating-photo, .ctrl-btn, .love-btn, .balloon')) return;
+
+        const el = document.createElement('div');
+        el.classList.add('floating-heart');
+        el.textContent = clickEmojis[Math.floor(Math.random() * clickEmojis.length)];
+        el.style.left = `${e.clientX}px`;
+        el.style.top  = `${e.clientY}px`;
+        el.style.fontSize = `${Math.random() * 1 + 1.2}rem`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1500);
+    });
+
 });

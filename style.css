@@ -9,55 +9,119 @@ body, html {
     height: 100%;
     overflow: hidden;
     font-family: 'Kanit', sans-serif;
-    /* พื้นหลังลวดลายจิ๊กซอว์ */
     background-image: url('assets/images/bg-pattern.png');
-    background-size: 400px; 
+    background-size: 400px;
     background-repeat: repeat;
     background-position: 0 0;
     animation: panBackground 40s linear infinite;
     position: relative;
-    user-select: none; /* Prevent text selection while dragging */
+    user-select: none;
 }
 
 @keyframes panBackground {
-    0% { background-position: 0 0; }
+    0%   { background-position: 0 0; }
     100% { background-position: 400px 400px; }
 }
 
-/* Container for all floating elements */
-#photo-container {
-    position: absolute;
+/* ========================================
+   CURSOR TRAIL CANVAS
+======================================== */
+#trailCanvas {
+    position: fixed;
     top: 0;
     left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* ========================================
+   BALLOON
+======================================== */
+#balloon-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+}
+
+.balloon {
+    position: absolute;
+    bottom: -150px;
+    font-size: 2.5rem;
+    pointer-events: auto;
+    cursor: pointer;
+    animation: floatUp var(--duration, 8s) linear forwards;
+    user-select: none;
+    transition: transform 0.1s;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+}
+
+.balloon:hover {
+    transform: scale(1.15);
+}
+
+@keyframes floatUp {
+    0%   { transform: translateY(0) rotate(-5deg); opacity: 1; }
+    50%  { transform: translateY(-50vh) rotate(5deg); opacity: 1; }
+    100% { transform: translateY(-110vh) rotate(-5deg); opacity: 0; }
+}
+
+.balloon.pop {
+    animation: popBalloon 0.4s ease-out forwards;
+}
+
+@keyframes popBalloon {
+    0%   { transform: scale(1); opacity: 1; }
+    50%  { transform: scale(1.8); opacity: 0.5; }
+    100% { transform: scale(0);  opacity: 0; }
+}
+
+/* ========================================
+   FLOATING PHOTOS (JIGSAW)
+======================================== */
+#photo-container {
+    position: absolute;
+    top: 0; left: 0;
     width: 100vw;
     height: 100vh;
-    pointer-events: none; /* Let clicks pass through if not on a photo */
+    pointer-events: none;
     z-index: 1;
 }
 
-/* Jigsaw/Photo styles */
 .floating-photo {
     position: absolute;
     width: 150px;
     height: 150px;
     background-size: cover;
     background-position: center;
-    border-radius: 15px; /* มุมมนๆ */
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.12);
     border: 4px solid white;
     cursor: grab;
-    pointer-events: auto; /* Enable interaction for photos */
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    pointer-events: auto;
+    transition: box-shadow 0.2s ease;
+    will-change: transform;
 }
 
-.floating-photo:active {
+.floating-photo:hover {
+    box-shadow: 0 16px 32px rgba(255, 105, 180, 0.4);
+}
+
+.floating-photo.dragging {
     cursor: grabbing;
-    transform: scale(1.1);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-    z-index: 100; /* นำมาไว้ข้างหน้าสุดตอนลาก */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    z-index: 100;
 }
 
-/* Main Container to center content */
+/* ========================================
+   MAIN CONTAINER
+======================================== */
 .main-container {
     position: absolute;
     top: 50%;
@@ -70,145 +134,255 @@ body, html {
     justify-content: center;
 }
 
-/* Gift Box */
+/* ========================================
+   GIFT BOX
+======================================== */
 .gift-box {
     position: relative;
     width: 200px;
-    height: 200px;
+    height: 220px;
     cursor: pointer;
-    transition: transform 0.3s;
-    animation: bounce 2s infinite ease-in-out;
+    animation: giftBounce 2.2s ease-in-out infinite;
+    filter: drop-shadow(0 12px 18px rgba(255, 105, 180, 0.3));
 }
 
 .gift-box:hover {
-    transform: scale(1.05);
-    animation: shake 0.5s infinite;
+    animation: giftShake 0.4s ease-in-out infinite;
+    filter: drop-shadow(0 18px 26px rgba(255, 105, 180, 0.5));
 }
 
 .gift-lid {
     position: absolute;
-    top: 20px;
-    left: -10px;
-    width: 220px;
-    height: 40px;
-    background-color: #ff69b4; /* สีชมพูเข้ม */
-    border-radius: 5px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    top: 20px; left: -10px;
+    width: 220px; height: 40px;
+    background: linear-gradient(135deg, #ff69b4, #ff1493);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     z-index: 2;
 }
 
 .gift-body {
     position: absolute;
-    top: 60px;
-    left: 0;
-    width: 200px;
-    height: 140px;
-    background-color: #ff9fb6;
-    border-radius: 0 0 5px 5px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    top: 60px; left: 0;
+    width: 200px; height: 140px;
+    background: linear-gradient(135deg, #ff9fb6, #ff69b4);
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    overflow: hidden;
 }
 
 .gift-ribbon-vertical {
     position: absolute;
-    top: 0;
-    left: 80px;
-    width: 40px;
-    height: 140px;
-    background-color: #ffd700; /* ริบบิ้นสีทอง */
+    top: 0; left: 76px;
+    width: 48px; height: 140px;
+    background: linear-gradient(135deg, #ffe082, #ffd700, #ffb300);
 }
 
 .gift-ribbon-horizontal {
     position: absolute;
-    top: 40px;
-    left: 0;
-    width: 200px;
-    height: 40px;
-    background-color: #ffd700;
+    top: 36px; left: 0;
+    width: 200px; height: 48px;
+    background: linear-gradient(135deg, #ffe082, #ffd700, #ffb300);
 }
 
 .gift-text {
     position: absolute;
-    bottom: -40px;
+    bottom: -44px;
     left: 50%;
     transform: translateX(-50%);
-    width: 250px;
+    width: 260px;
     text-align: center;
-    font-size: 1.2rem;
-    color: #d81b60;
+    font-size: 1.1rem;
+    color: #c2185b;
     font-weight: 600;
-    text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+    text-shadow: 1px 1px 3px rgba(255,255,255,0.9);
     pointer-events: none;
+    animation: pulseTxt 1.5s ease-in-out infinite;
 }
 
-/* Message Card (Glassmorphism) */
+@keyframes pulseTxt {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.6; }
+}
+
+/* ========================================
+   SPARKLES around gift box
+======================================== */
+.sparkle {
+    position: absolute;
+    font-size: 1.2rem;
+    color: #ffd700;
+    pointer-events: none;
+    animation: sparkleSpin var(--spd, 2s) ease-in-out infinite;
+}
+
+.sparkle.s1 { top: -15px;  left: 20px;   --spd: 1.8s; font-size: 1rem; }
+.sparkle.s2 { top: -10px;  right: 20px;  --spd: 2.2s; font-size: 1.4rem; }
+.sparkle.s3 { top: 50%;    left: -20px;  --spd: 1.6s; font-size: 0.9rem; }
+.sparkle.s4 { top: 50%;    right: -20px; --spd: 2.5s; font-size: 1.1rem; }
+.sparkle.s5 { bottom: 10px; left: 50%;  --spd: 2.0s; font-size: 0.85rem; }
+
+@keyframes sparkleSpin {
+    0%   { transform: rotate(0deg)   scale(1);   opacity: 1; }
+    50%  { transform: rotate(180deg) scale(1.5); opacity: 0.5; }
+    100% { transform: rotate(360deg) scale(1);   opacity: 1; }
+}
+
+/* ========================================
+   MESSAGE CARD
+======================================== */
 .message-card {
-    background: rgba(255, 255, 255, 0.45);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    border-radius: 20px;
-    padding: 40px;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1.5px solid rgba(255, 255, 255, 0.75);
+    border-radius: 24px;
+    padding: 44px 48px;
     text-align: center;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    color: #d81b60;
-    transform: scale(0.8);
+    box-shadow:
+        0 20px 50px rgba(255, 105, 180, 0.2),
+        0 2px 8px rgba(255,255,255,0.5) inset;
+    color: #c2185b;
+    transform: scale(0.7) translateY(20px);
     opacity: 0;
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-width: 480px;
 }
 
 .message-card.show {
-    transform: scale(1);
+    transform: scale(1) translateY(0);
     opacity: 1;
 }
 
 .message-card h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-shadow: 2px 2px 6px rgba(255,255,255,0.8);
+    min-height: 3.5rem;
 }
 
 .message-card p {
     font-size: 1.2rem;
-    line-height: 1.5;
+    line-height: 1.8;
+    color: #d81b60;
+    margin-bottom: 20px;
 }
 
-.hidden {
-    display: none;
+/* ========================================
+   LOVE BUTTON
+======================================== */
+.love-btn {
+    background: linear-gradient(135deg, #ff4081, #f50057);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 32px;
+    font-family: 'Kanit', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(255, 64, 129, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: heartbeat 1.5s ease-in-out infinite;
+    pointer-events: auto;
 }
 
-/* Animations */
-@keyframes shake {
-    0% { transform: rotate(0deg); }
-    25% { transform: rotate(-5deg); }
-    50% { transform: rotate(0deg); }
-    75% { transform: rotate(5deg); }
-    100% { transform: rotate(0deg); }
+.love-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 10px 30px rgba(255, 64, 129, 0.6);
+    animation: none;
 }
 
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+.love-btn:active {
+    transform: scale(0.95);
 }
 
-/* Floating Heart Effect (Click Effect) */
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    14%       { transform: scale(1.06); }
+    28%       { transform: scale(1); }
+    42%       { transform: scale(1.04); }
+    70%       { transform: scale(1); }
+}
+
+/* ========================================
+   UI CONTROLS (top-right)
+======================================== */
+.ui-controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ctrl-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ctrl-btn:hover {
+    transform: scale(1.15);
+    box-shadow: 0 8px 25px rgba(255, 105, 180, 0.5);
+    background: rgba(255, 255, 255, 0.85);
+}
+
+.ctrl-btn:active {
+    transform: scale(0.9);
+}
+
+/* ========================================
+   FLOATING HEARTS (click effect)
+======================================== */
 .floating-heart {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff4081"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>');
-    background-size: cover;
+    position: fixed;
     pointer-events: none;
     z-index: 1000;
-    animation: floatUpHeart 1.5s ease-out forwards;
+    font-size: 1.6rem;
+    animation: floatUpHeart 1.4s ease-out forwards;
+    transform: translate(-50%, -50%);
 }
 
 @keyframes floatUpHeart {
-    0% {
-        transform: translate(-50%, -50%) scale(0.5);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -150px) scale(1.5);
-        opacity: 0;
-    }
+    0%   { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+    80%  { opacity: 1; }
+    100% { transform: translate(-50%, calc(-50% - 130px)) scale(1.4); opacity: 0; }
+}
+
+/* ========================================
+   HIDDEN UTILITY
+======================================== */
+.hidden {
+    display: none !important;
+}
+
+/* ========================================
+   ANIMATIONS
+======================================== */
+@keyframes giftBounce {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-12px); }
+}
+
+@keyframes giftShake {
+    0%   { transform: rotate(0deg); }
+    20%  { transform: rotate(-6deg); }
+    40%  { transform: rotate(6deg); }
+    60%  { transform: rotate(-4deg); }
+    80%  { transform: rotate(4deg); }
+    100% { transform: rotate(0deg); }
 }
