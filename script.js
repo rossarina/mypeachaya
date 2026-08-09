@@ -1,9 +1,9 @@
 // ============================================================
 //  QUIZ CONFIG — แก้ไขคำถามและคำตอบตรงนี้ได้เลยครับ! 🔧
 // ============================================================
-const QUIZ_QUESTION = '"เราเจอกันครั้งแรกที่ไหน?"';
+const QUIZ_QUESTION = '"วันนี้วันเกิดใครน้า?"';
 //  ⬇️  ใส่คำตอบที่ถูกต้องตรงนี้ (พิมพ์เล็กหรือใหญ่ก็ตรวจได้):
-const QUIZ_ANSWER   = 'มหาวิทยาลัย';   // 🔧 เปลี่ยนตรงนี้!
+const QUIZ_ANSWER = 'ด.ญ พีชญา รัตนะเดชาวัน';   // 🔧 เปลี่ยนตรงนี้!
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -11,11 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     // 0. QUIZ SCREEN — ต้องตอบถูกก่อนเข้าเว็บหลัก
     // ============================================================
-    const quizOverlay  = document.getElementById('quizOverlay');
-    const quizInput    = document.getElementById('quizInput');
-    const quizSubmit   = document.getElementById('quizSubmit');
+    const quizOverlay = document.getElementById('quizOverlay');
+    const quizInput = document.getElementById('quizInput');
+    const quizSubmit = document.getElementById('quizSubmit');
     const quizFeedback = document.getElementById('quizFeedback');
-    const quizCard     = document.querySelector('.quiz-card');
+    const quizCard = document.querySelector('.quiz-card');
     const quizQuestion = document.getElementById('quizQuestion');
 
     // Set question text from config
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const userAnswer = quizInput.value.trim();
 
         if (userAnswer === '') {
-            quizFeedback.textContent = 'กรุณาพิมพ์คำตอบก่อนนะ 🥺';
+            quizFeedback.textContent = 'พิมพ์คำตอบก่อนนะ 🥺';
             quizFeedback.className = 'quiz-feedback wrong';
             return;
         }
@@ -80,43 +80,43 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     // 1. CURSOR TRAIL (Sparkling Stars)
     // ============================================================
-    const canvas  = document.getElementById('trailCanvas');
-    const ctx     = canvas.getContext('2d');
-    canvas.width  = window.innerWidth;
+    const canvas = document.getElementById('trailCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     window.addEventListener('resize', () => {
-        canvas.width  = window.innerWidth;
+        canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     });
 
     const particles = [];
 
     function Particle(x, y) {
-        this.x    = x;
-        this.y    = y;
+        this.x = x;
+        this.y = y;
         this.size = Math.random() * 6 + 3;
         this.alpha = 1;
-        this.dx   = (Math.random() - 0.5) * 3;
-        this.dy   = (Math.random() - 0.5) * 3 - 1;
+        this.dx = (Math.random() - 0.5) * 3;
+        this.dy = (Math.random() - 0.5) * 3 - 1;
         const colors = ['#ff4081', '#ff80ab', '#ffd740', '#ff6ec7', '#ea80fc', '#ffffff'];
         this.color = colors[Math.floor(Math.random() * colors.length)];
         this.shape = Math.random() > 0.5 ? 'star' : 'circle';
     }
 
-    Particle.prototype.update = function() {
-        this.x     += this.dx;
-        this.y     += this.dy;
+    Particle.prototype.update = function () {
+        this.x += this.dx;
+        this.y += this.dy;
         this.alpha -= 0.025;
-        this.size  *= 0.97;
+        this.size *= 0.97;
     };
 
-    Particle.prototype.draw = function() {
+    Particle.prototype.draw = function () {
         ctx.save();
         ctx.globalAlpha = Math.max(0, this.alpha);
-        ctx.fillStyle   = this.color;
+        ctx.fillStyle = this.color;
         ctx.shadowColor = this.color;
-        ctx.shadowBlur  = 8;
+        ctx.shadowBlur = 8;
         if (this.shape === 'star') {
             drawStar(ctx, this.x, this.y, 5, this.size, this.size / 2);
         } else {
@@ -164,13 +164,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     // 2. FLOATING PHOTOS (Jigsaw) — Bounce + Drag & Drop
     // ============================================================
-    const photos    = document.querySelectorAll('.floating-photo');
+    const photos = document.querySelectorAll('.floating-photo');
     const photoData = [];
     const photoSize = 180;
 
     photos.forEach(photo => {
-        const x  = Math.random() * (window.innerWidth  - photoSize);
-        const y  = Math.random() * (window.innerHeight - photoSize);
+        const x = Math.random() * (window.innerWidth - photoSize);
+        const y = Math.random() * (window.innerHeight - photoSize);
         const dx = (Math.random() - 0.5) * 1.5;
         const dy = (Math.random() - 0.5) * 1.5;
         photoData.push({ element: photo, x, y, dx, dy, isDragging: false });
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.isDragging) return;
             data.x += data.dx;
             data.y += data.dy;
-            if (data.x <= 0 || data.x + photoSize >= window.innerWidth)  data.dx *= -1;
+            if (data.x <= 0 || data.x + photoSize >= window.innerWidth) data.dx *= -1;
             if (data.y <= 0 || data.y + photoSize >= window.innerHeight) data.dy *= -1;
             data.element.style.transform = `translate(${data.x}px, ${data.y}px)`;
         });
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('pointermove', e => {
         if (!activeData) return;
         e.preventDefault();
-        activeData.x = Math.max(0, Math.min(e.clientX - initX, window.innerWidth  - photoSize));
+        activeData.x = Math.max(0, Math.min(e.clientX - initX, window.innerWidth - photoSize));
         activeData.y = Math.max(0, Math.min(e.clientY - initY, window.innerHeight - photoSize));
         activeData.element.style.transform = `translate(${activeData.x}px, ${activeData.y}px)`;
     });
@@ -224,13 +224,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. BALLOONS — Spawn, Float Up, Pop on Click
     // ============================================================
     const balloonContainer = document.getElementById('balloon-container');
-    const balloonEmojis    = ['🎈', '🎀', '🎊', '🩷', '💗', '🌸', '🦋'];
+    const balloonEmojis = ['🎈', '🎀', '🎊', '🩷', '💗', '🌸', '🦋'];
 
     function spawnBalloon() {
         const b = document.createElement('div');
         b.classList.add('balloon');
-        b.textContent  = balloonEmojis[Math.floor(Math.random() * balloonEmojis.length)];
-        b.style.left   = `${Math.random() * 90 + 5}%`;
+        b.textContent = balloonEmojis[Math.floor(Math.random() * balloonEmojis.length)];
+        b.style.left = `${Math.random() * 90 + 5}%`;
         b.style.setProperty('--duration', `${Math.random() * 5 + 7}s`);
 
         b.addEventListener('pointerdown', e => {
@@ -261,11 +261,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     // 4. GIFT BOX — Click to Reveal + Confetti
     // ============================================================
-    const giftBox     = document.getElementById('giftBox');
+    const giftBox = document.getElementById('giftBox');
     const messageCard = document.getElementById('messageCard');
-    const bgMusic     = document.getElementById('bgMusic');
-    const hbdTitle    = document.getElementById('hbd-title');
-    const hbdDesc     = document.getElementById('hbd-desc');
+    const bgMusic = document.getElementById('bgMusic');
+    const hbdTitle = document.getElementById('hbd-title');
+    const hbdDesc = document.getElementById('hbd-desc');
 
     // Typewriter effect for the birthday message
     function typeWriter(el, text, speed = 80) {
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 20);
 
         fireConfetti();
-        bgMusic.play().catch(() => {});
+        bgMusic.play().catch(() => { });
     });
 
 
@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 h.classList.add('floating-heart');
                 h.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
                 h.style.left = `${Math.random() * 100}vw`;
-                h.style.top  = `${Math.random() * 80 + 10}vh`;
+                h.style.top = `${Math.random() * 80 + 10}vh`;
                 h.style.fontSize = `${Math.random() * 1.5 + 1}rem`;
                 document.body.appendChild(h);
                 setTimeout(() => h.remove(), 1500);
@@ -337,20 +337,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function fireConfetti() {
-        const duration   = 3500;
-        const endTime    = Date.now() + duration;
-        const defaults   = { spread: 360, ticks: 80, zIndex: 9998, startVelocity: 28 };
+        const duration = 3500;
+        const endTime = Date.now() + duration;
+        const defaults = { spread: 360, ticks: 80, zIndex: 9998, startVelocity: 28 };
 
         const interval = setInterval(() => {
             const timeLeft = endTime - Date.now();
             if (timeLeft <= 0) return clearInterval(interval);
             const count = 55 * (timeLeft / duration);
-            confetti({ ...defaults, particleCount: count,
+            confetti({
+                ...defaults, particleCount: count,
                 colors: ['#ff4081', '#ffd740', '#ea80fc', '#ff80ab', '#ffffff'],
-                origin: { x: Math.random() * 0.3 + 0.1, y: Math.random() - 0.2 } });
-            confetti({ ...defaults, particleCount: count,
+                origin: { x: Math.random() * 0.3 + 0.1, y: Math.random() - 0.2 }
+            });
+            confetti({
+                ...defaults, particleCount: count,
                 colors: ['#ff4081', '#ffd740', '#ea80fc', '#ff80ab', '#ffffff'],
-                origin: { x: Math.random() * 0.3 + 0.6, y: Math.random() - 0.2 } });
+                origin: { x: Math.random() * 0.3 + 0.6, y: Math.random() - 0.2 }
+            });
         }, 220);
     }
 
@@ -367,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
             bgMusic.pause();
             musicBtn.textContent = '🔇';
         } else {
-            bgMusic.play().catch(() => {});
+            bgMusic.play().catch(() => { });
             musicBtn.textContent = '🎵';
         }
         musicPlaying = !musicPlaying;
@@ -387,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
         el.classList.add('floating-heart');
         el.textContent = clickEmojis[Math.floor(Math.random() * clickEmojis.length)];
         el.style.left = `${e.clientX}px`;
-        el.style.top  = `${e.clientY}px`;
+        el.style.top = `${e.clientY}px`;
         el.style.fontSize = `${Math.random() * 1 + 1.2}rem`;
         document.body.appendChild(el);
         setTimeout(() => el.remove(), 1500);
