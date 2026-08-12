@@ -267,6 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
             typeWriter(hbdTitle, 'Happy Birthday My Love! 🎂', 70);
         }, 20);
         fireConfetti();
+        bgMusic.volume = 0.3;
         bgMusic.play().catch(() => { });
 
         // Show secret sections below
@@ -334,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
     musicBtn.addEventListener('click', e => {
         e.stopPropagation();
         if (musicPlaying) { bgMusic.pause(); musicBtn.textContent = '🔇'; }
-        else { bgMusic.play().catch(() => { }); musicBtn.textContent = '🎵'; }
+        else { bgMusic.volume = 0.3; bgMusic.play().catch(() => { }); musicBtn.textContent = '🎵'; }
         musicPlaying = !musicPlaying;
     });
 
