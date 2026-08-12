@@ -273,6 +273,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Show secret sections below
         document.getElementById('secretSections').classList.remove('hidden');
+
+        // Re-init scratch card now that container is visible (it was hidden before, so offsetWidth was 0)
+        setTimeout(() => { if (typeof reinitScratch === 'function') reinitScratch(); }, 150);
     });
 
     // Scroll-down button
@@ -663,6 +666,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initScratch();
     window.addEventListener('resize', initScratch);
+
+    // Public re-init function (called when scratch section first becomes visible)
+    window.reinitScratch = function() {
+        scratchCtx.globalCompositeOperation = 'source-over';
+        initScratch();
+        scratchCtx.globalCompositeOperation = 'destination-out';
+    };
 
     scratchCtx.globalCompositeOperation = 'destination-out';
 
