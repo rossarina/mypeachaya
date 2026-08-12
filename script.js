@@ -179,8 +179,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const y = Math.random() * (window.innerHeight - photoSize);
         const dx = (Math.random() - 0.5) * 1.5;
         const dy = (Math.random() - 0.5) * 1.5;
-        photoData.push({ element: photo, x, y, dx, dy, isDragging: false });
-        photo.style.transform = `translate(${x}px, ${y}px)`;
+        const rotation = (Math.random() - 0.5) * 28; // -14 to +14 degrees
+        photoData.push({ element: photo, x, y, dx, dy, isDragging: false, rotation });
+        photo.style.transform = `translate(${x}px, ${y}px) rotate(${rotation}deg)`;
     });
 
     function animatePhotos() {
@@ -189,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
             data.x += data.dx; data.y += data.dy;
             if (data.x <= 0 || data.x + photoSize >= window.innerWidth) data.dx *= -1;
             if (data.y <= 0 || data.y + photoSize >= window.innerHeight) data.dy *= -1;
-            data.element.style.transform = `translate(${data.x}px, ${data.y}px)`;
+            data.element.style.transform = `translate(${data.x}px, ${data.y}px) rotate(${data.rotation}deg)`;
         });
         requestAnimationFrame(animatePhotos);
     }
@@ -211,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         activeData.x = Math.max(0, Math.min(e.clientX - initX, window.innerWidth - photoSize));
         activeData.y = Math.max(0, Math.min(e.clientY - initY, window.innerHeight - photoSize));
-        activeData.element.style.transform = `translate(${activeData.x}px, ${activeData.y}px)`;
+        activeData.element.style.transform = `translate(${activeData.x}px, ${activeData.y}px) rotate(${activeData.rotation}deg)`;
     });
     window.addEventListener('pointerup', () => {
         if (activeData) { activeData.isDragging = false; activeData.element.classList.remove('dragging'); activeData = null; }
