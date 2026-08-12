@@ -2,7 +2,7 @@
 //  QUIZ CONFIG — แก้ไขคำถามและคำตอบตรงนี้ได้เลยครับ! 🔧
 // ============================================================
 const QUIZ_QUESTION = '"วันนี้วันเกิดใครน้า?"';
-const QUIZ_ANSWER   = 'ด.ญ พีชญา รัตนะเดชาวัน';  // 🔧 เปลี่ยนตรงนี้!
+const QUIZ_ANSWER = 'ด.ญ พีชญา รัตนะเดชาวัน';  // 🔧 เปลี่ยนตรงนี้!
 
 // ============================================================
 //  ANNIVERSARY DATE — วันที่เริ่มคบกัน 🔧
@@ -40,11 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     // 0. QUIZ SCREEN
     // ============================================================
-    const quizOverlay  = document.getElementById('quizOverlay');
-    const quizInput    = document.getElementById('quizInput');
-    const quizSubmit   = document.getElementById('quizSubmit');
+    const quizOverlay = document.getElementById('quizOverlay');
+    const quizInput = document.getElementById('quizInput');
+    const quizSubmit = document.getElementById('quizSubmit');
     const quizFeedback = document.getElementById('quizFeedback');
-    const quizCard     = document.querySelector('.quiz-card');
+    const quizCard = document.querySelector('.quiz-card');
     const quizQuestion = document.getElementById('quizQuestion');
 
     quizQuestion.textContent = QUIZ_QUESTION;
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
             quizFeedback.textContent = '🎉 ถูกต้องแล้ว! เข้ามาได้เลยนะ 💖';
             quizFeedback.className = 'quiz-feedback correct';
             quizSubmit.disabled = true;
-            confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#ff4081','#ffd740','#ea80fc','#ff80ab','#ffffff'] });
+            confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#ff4081', '#ffd740', '#ea80fc', '#ff80ab', '#ffffff'] });
             setTimeout(() => { quizOverlay.classList.add('dismissed'); }, 900);
         } else {
             quizFeedback.textContent = 'ยังไม่ถูกเลยนะ ลองใหม่อีกทีนะ 🙈';
@@ -82,24 +82,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. CURSOR TRAIL (Stars & Hearts)
     // ============================================================
     const canvas = document.getElementById('trailCanvas');
-    const ctx    = canvas.getContext('2d');
-    canvas.width  = window.innerWidth;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     window.addEventListener('resize', () => {
-        canvas.width  = window.innerWidth;
+        canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     });
 
     const particles = [];
-    const trailColors = ['#ff4081','#ff80ab','#ffd740','#ff6ec7','#ea80fc','#ffffff'];
+    const trailColors = ['#ff4081', '#ff80ab', '#ffd740', '#ff6ec7', '#ea80fc', '#ffffff'];
 
     function Particle(x, y) {
         this.x = x; this.y = y;
-        this.size  = Math.random() * 6 + 3;
+        this.size = Math.random() * 6 + 3;
         this.alpha = 1;
-        this.dx    = (Math.random() - 0.5) * 3;
-        this.dy    = (Math.random() - 0.5) * 3 - 1;
+        this.dx = (Math.random() - 0.5) * 3;
+        this.dy = (Math.random() - 0.5) * 3 - 1;
         this.color = trailColors[Math.floor(Math.random() * trailColors.length)];
         this.shape = Math.random() > 0.4 ? 'heart' : (Math.random() > 0.5 ? 'star' : 'circle');
     }
@@ -112,9 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
     Particle.prototype.draw = function () {
         ctx.save();
         ctx.globalAlpha = Math.max(0, this.alpha);
-        ctx.fillStyle   = this.color;
+        ctx.fillStyle = this.color;
         ctx.shadowColor = this.color;
-        ctx.shadowBlur  = 8;
+        ctx.shadowBlur = 8;
         if (this.shape === 'heart') {
             drawHeart(ctx, this.x, this.y, this.size);
         } else if (this.shape === 'star') {
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     // 2. FLOATING PHOTOS (Jigsaw) — Bounce + Drag
     // ============================================================
-    const photos    = document.querySelectorAll('.floating-photo');
+    const photos = document.querySelectorAll('.floating-photo');
     const photoData = [];
     const photoSize = 180;
 
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         photoData.forEach(data => {
             if (data.isDragging) return;
             data.x += data.dx; data.y += data.dy;
-            if (data.x <= 0 || data.x + photoSize >= window.innerWidth)  data.dx *= -1;
+            if (data.x <= 0 || data.x + photoSize >= window.innerWidth) data.dx *= -1;
             if (data.y <= 0 || data.y + photoSize >= window.innerHeight) data.dy *= -1;
             data.element.style.transform = `translate(${data.x}px, ${data.y}px)`;
         });
@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. BALLOONS — Spawn, Float Up, Pop on Click
     // ============================================================
     const balloonContainer = document.getElementById('balloon-container');
-    const balloonEmojis    = ['🎈','🎀','🎊','🩷','💗','🌸','🦋'];
+    const balloonEmojis = ['🎈', '🎀', '🎊', '🩷', '💗', '🌸', '🦋'];
 
     function spawnBalloon() {
         const b = document.createElement('div');
@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
         b.addEventListener('pointerdown', e => {
             e.stopPropagation();
             b.classList.add('pop');
-            confetti({ particleCount: 40, spread: 60, origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight }, colors: ['#ff4081','#ffd740','#ea80fc','#ff80ab'], scalar: 0.8, ticks: 50 });
+            confetti({ particleCount: 40, spread: 60, origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight }, colors: ['#ff4081', '#ffd740', '#ea80fc', '#ff80ab'], scalar: 0.8, ticks: 50 });
             setTimeout(() => b.remove(), 400);
         });
         b.addEventListener('animationend', () => b.remove());
@@ -246,10 +246,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     // 4. GIFT BOX — Click to Reveal + Confetti
     // ============================================================
-    const giftBox     = document.getElementById('giftBox');
+    const giftBox = document.getElementById('giftBox');
     const messageCard = document.getElementById('messageCard');
-    const bgMusic     = document.getElementById('bgMusic');
-    const hbdTitle    = document.getElementById('hbd-title');
+    const bgMusic = document.getElementById('bgMusic');
+    const hbdTitle = document.getElementById('hbd-title');
     const pageWrapper = document.getElementById('pageWrapper');
 
     function typeWriter(el, text, speed = 80) {
@@ -286,18 +286,18 @@ document.addEventListener('DOMContentLoaded', () => {
     loveBtn.addEventListener('click', e => {
         e.stopPropagation();
         fireLoveHearts();
-        confetti({ particleCount: 80, shapes: ['circle'], colors: ['#ff4081','#ff80ab','#ffd740','#ea80fc'], origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight }, spread: 100, startVelocity: 35 });
+        confetti({ particleCount: 80, shapes: ['circle'], colors: ['#ff4081', '#ff80ab', '#ffd740', '#ea80fc'], origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight }, spread: 100, startVelocity: 35 });
     });
 
     function fireLoveHearts() {
-        const heartEmojis = ['💖','💕','💗','💝','💓','💞','❤️','🩷'];
+        const heartEmojis = ['💖', '💕', '💗', '💝', '💓', '💞', '❤️', '🩷'];
         for (let i = 0; i < 20; i++) {
             setTimeout(() => {
                 const h = document.createElement('div');
                 h.classList.add('floating-heart');
                 h.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
-                h.style.left     = `${Math.random() * 100}vw`;
-                h.style.top      = `${Math.random() * 80 + 10}vh`;
+                h.style.left = `${Math.random() * 100}vw`;
+                h.style.top = `${Math.random() * 80 + 10}vh`;
                 h.style.fontSize = `${Math.random() * 1.5 + 1}rem`;
                 document.body.appendChild(h);
                 setTimeout(() => h.remove(), 1500);
@@ -313,14 +313,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function fireConfetti() {
         const duration = 3500;
-        const endTime  = Date.now() + duration;
+        const endTime = Date.now() + duration;
         const defaults = { spread: 360, ticks: 80, zIndex: 9998, startVelocity: 28 };
         const interval = setInterval(() => {
             const timeLeft = endTime - Date.now();
             if (timeLeft <= 0) return clearInterval(interval);
             const count = 55 * (timeLeft / duration);
-            confetti({ ...defaults, particleCount: count, colors: ['#ff4081','#ffd740','#ea80fc','#ff80ab','#ffffff'], origin: { x: Math.random() * 0.3 + 0.1, y: Math.random() - 0.2 } });
-            confetti({ ...defaults, particleCount: count, colors: ['#ff4081','#ffd740','#ea80fc','#ff80ab','#ffffff'], origin: { x: Math.random() * 0.3 + 0.6, y: Math.random() - 0.2 } });
+            confetti({ ...defaults, particleCount: count, colors: ['#ff4081', '#ffd740', '#ea80fc', '#ff80ab', '#ffffff'], origin: { x: Math.random() * 0.3 + 0.1, y: Math.random() - 0.2 } });
+            confetti({ ...defaults, particleCount: count, colors: ['#ff4081', '#ffd740', '#ea80fc', '#ff80ab', '#ffffff'], origin: { x: Math.random() * 0.3 + 0.6, y: Math.random() - 0.2 } });
         }, 220);
     }
 
@@ -334,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
     musicBtn.addEventListener('click', e => {
         e.stopPropagation();
         if (musicPlaying) { bgMusic.pause(); musicBtn.textContent = '🔇'; }
-        else { bgMusic.play().catch(() => {}); musicBtn.textContent = '🎵'; }
+        else { bgMusic.play().catch(() => { }); musicBtn.textContent = '🎵'; }
         musicPlaying = !musicPlaying;
     });
 
@@ -342,14 +342,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     // 8. CLICK ANYWHERE — Random Emoji Float Up
     // ============================================================
-    const clickEmojis = ['💖','✨','🌸','💕','⭐','🦋','🌟','💫'];
+    const clickEmojis = ['💖', '✨', '🌸', '💕', '⭐', '🦋', '🌟', '💫'];
     document.body.addEventListener('pointerdown', e => {
         if (e.target.closest('.gift-box, .floating-photo, .ctrl-btn, .love-btn, .balloon, button, canvas, .easter-egg, .modal-overlay, .quiz-overlay, .cassette-tape, .gacha-machine, .scratch-container')) return;
         const el = document.createElement('div');
         el.classList.add('floating-heart');
         el.textContent = clickEmojis[Math.floor(Math.random() * clickEmojis.length)];
-        el.style.left     = `${e.clientX}px`;
-        el.style.top      = `${e.clientY}px`;
+        el.style.left = `${e.clientX}px`;
+        el.style.top = `${e.clientY}px`;
         el.style.fontSize = `${Math.random() * 1 + 1.2}rem`;
         document.body.appendChild(el);
         setTimeout(() => el.remove(), 1500);
@@ -360,25 +360,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // 9. DAYS TOGETHER COUNTER
     // ============================================================
     function updateCounter() {
-        const now  = new Date();
+        const now = new Date();
         const diff = now - ANNIVERSARY;
         if (diff < 0) {
-            document.getElementById('counterDays').textContent  = '000';
+            document.getElementById('counterDays').textContent = '000';
             document.getElementById('counterHours').textContent = '00';
-            document.getElementById('counterMins').textContent  = '00';
-            document.getElementById('counterSecs').textContent  = '00';
+            document.getElementById('counterMins').textContent = '00';
+            document.getElementById('counterSecs').textContent = '00';
             return;
         }
         const totalSecs = Math.floor(diff / 1000);
-        const days  = Math.floor(totalSecs / 86400);
+        const days = Math.floor(totalSecs / 86400);
         const hours = Math.floor((totalSecs % 86400) / 3600);
-        const mins  = Math.floor((totalSecs % 3600) / 60);
-        const secs  = totalSecs % 60;
+        const mins = Math.floor((totalSecs % 3600) / 60);
+        const secs = totalSecs % 60;
 
-        document.getElementById('counterDays').textContent  = String(days).padStart(3, '0');
+        document.getElementById('counterDays').textContent = String(days).padStart(3, '0');
         document.getElementById('counterHours').textContent = String(hours).padStart(2, '0');
-        document.getElementById('counterMins').textContent  = String(mins).padStart(2, '0');
-        document.getElementById('counterSecs').textContent  = String(secs).padStart(2, '0');
+        document.getElementById('counterMins').textContent = String(mins).padStart(2, '0');
+        document.getElementById('counterSecs').textContent = String(secs).padStart(2, '0');
     }
     updateCounter();
     setInterval(updateCounter, 1000);
@@ -387,7 +387,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     // 10. LOVE QUESTION — Runaway "ไม่รัก" Button
     // ============================================================
-    const btnNo  = document.getElementById('btnNo');
+    const btnNo = document.getElementById('btnNo');
     const loveWinEl = document.getElementById('loveWin');
 
     let noButtonPos = { x: null, y: null };
@@ -396,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function moveNoButton(mouseX, mouseY) {
         const btnRect = btnNo.getBoundingClientRect();
         const btnCX = btnRect.left + btnRect.width / 2;
-        const btnCY = btnRect.top  + btnRect.height / 2;
+        const btnCY = btnRect.top + btnRect.height / 2;
         const dx = mouseX - btnCX;
         const dy = mouseY - btnCY;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -406,12 +406,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // First time running away: change to fixed position at current coordinates
             if (!isRunaway) {
                 btnNo.style.left = btnRect.left + 'px';
-                btnNo.style.top  = btnRect.top + 'px';
+                btnNo.style.top = btnRect.top + 'px';
                 btnNo.classList.add('runaway');
                 noButtonPos.x = btnRect.left;
                 noButtonPos.y = btnRect.top;
                 isRunaway = true;
-                
+
                 // Keep the Yes button centered by forcing the parent container to ignore the No button's space
                 // No action needed since fixed position takes it out of flow.
             }
@@ -424,13 +424,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // Clamp to viewport
             const bw = btnRect.width;
             const bh = btnRect.height;
-            newX = Math.max(10, Math.min(window.innerWidth  - bw - 10, newX));
+            newX = Math.max(10, Math.min(window.innerWidth - bw - 10, newX));
             newY = Math.max(10, Math.min(window.innerHeight - bh - 10, newY));
 
             noButtonPos.x = newX;
             noButtonPos.y = newY;
             btnNo.style.left = newX + 'px';
-            btnNo.style.top  = newY + 'px';
+            btnNo.style.top = newY + 'px';
         }
     }
 
@@ -454,34 +454,34 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation();
         if (!isRunaway) return; // If somehow clicked before running away
         const btnRect = btnNo.getBoundingClientRect();
-        const randomX = Math.random() * (window.innerWidth  - btnRect.width  - 20) + 10;
+        const randomX = Math.random() * (window.innerWidth - btnRect.width - 20) + 10;
         const randomY = Math.random() * (window.innerHeight - btnRect.height - 20) + 10;
         noButtonPos.x = randomX;
         noButtonPos.y = randomY;
         btnNo.style.left = randomX + 'px';
-        btnNo.style.top  = randomY + 'px';
+        btnNo.style.top = randomY + 'px';
     });
 
     // Yes button
-    window.onPressYes = function() {
+    window.onPressYes = function () {
         loveWinEl.classList.remove('hidden');
         document.getElementById('loveWinModal').classList.remove('hidden');
         fireLoveHearts();
-        confetti({ particleCount: 120, spread: 100, origin: { y: 0.5 }, colors: ['#ff4081','#ffd740','#ea80fc','#ff80ab'] });
+        confetti({ particleCount: 120, spread: 100, origin: { y: 0.5 }, colors: ['#ff4081', '#ffd740', '#ea80fc', '#ff80ab'] });
     };
 
 
     // ============================================================
     // 11. LOVE COUPON GACHA
     // ============================================================
-    const gachaBtn      = document.getElementById('gachaBtn');
-    const gachaSaveBtn  = document.getElementById('gachaSaveBtn');
-    const gachaBall     = document.getElementById('gachaBall');
-    const gachaResult   = document.getElementById('gachaResult');
-    const gachaIdle     = document.getElementById('gachaIdle');
-    const couponIcon    = document.getElementById('couponIcon');
-    const couponText    = document.getElementById('couponText');
-    const gachaNote     = document.getElementById('gachaNote');
+    const gachaBtn = document.getElementById('gachaBtn');
+    const gachaSaveBtn = document.getElementById('gachaSaveBtn');
+    const gachaBall = document.getElementById('gachaBall');
+    const gachaResult = document.getElementById('gachaResult');
+    const gachaIdle = document.getElementById('gachaIdle');
+    const couponIcon = document.getElementById('couponIcon');
+    const couponText = document.getElementById('couponText');
+    const gachaNote = document.getElementById('gachaNote');
 
     let currentCoupon = null;
 
@@ -546,7 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 gachaSaveBtn.classList.remove('hidden');
                 gachaNote.textContent = '💡 สุ่มแล้ววันนี้! มาใหม่พรุ่งนี้นะ~ 🌸';
 
-                confetti({ particleCount: 60, spread: 80, origin: { y: 0.5 }, colors: ['#ff4081','#ffd740','#ea80fc'] });
+                confetti({ particleCount: 60, spread: 80, origin: { y: 0.5 }, colors: ['#ff4081', '#ffd740', '#ea80fc'] });
             }, 600);
         }, 600);
     });
@@ -556,7 +556,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!currentCoupon) return;
         const offCanvas = document.getElementById('couponCanvas');
         const w = 400, h = 250;
-        offCanvas.width  = w;
+        offCanvas.width = w;
         offCanvas.height = h;
         const octx = offCanvas.getContext('2d');
 
@@ -622,23 +622,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     // 12. SCRATCH CARD
     // ============================================================
-    const scratchCanvas    = document.getElementById('scratchCanvas');
+    const scratchCanvas = document.getElementById('scratchCanvas');
     const scratchContainer = document.getElementById('scratchContainer');
-    const scratchCtx       = scratchCanvas.getContext('2d');
+    const scratchCtx = scratchCanvas.getContext('2d');
 
     function initScratch() {
         const w = scratchContainer.offsetWidth;
         const h = scratchContainer.offsetHeight;
-        scratchCanvas.width  = w;
+        scratchCanvas.width = w;
         scratchCanvas.height = h;
 
         // Fill with silver gradient (the "scratch" layer)
         const grad = scratchCtx.createLinearGradient(0, 0, w, h);
-        grad.addColorStop(0,   '#c0c0c0');
+        grad.addColorStop(0, '#c0c0c0');
         grad.addColorStop(0.3, '#e8e8e8');
         grad.addColorStop(0.5, '#d0d0d0');
         grad.addColorStop(0.7, '#bdbdbd');
-        grad.addColorStop(1,   '#a0a0a0');
+        grad.addColorStop(1, '#a0a0a0');
         scratchCtx.fillStyle = grad;
         scratchCtx.fillRect(0, 0, w, h);
 
@@ -685,7 +685,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scratchAt(e.clientX - rect.left, e.clientY - rect.top);
     });
 
-    scratchCanvas.addEventListener('mouseup',    () => { isScratchingActive = false; });
+    scratchCanvas.addEventListener('mouseup', () => { isScratchingActive = false; });
     scratchCanvas.addEventListener('mouseleave', () => { isScratchingActive = false; });
 
     // Touch support
@@ -718,16 +718,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     // 13. VOICE NOTE PLAYER (Cassette Tape)
     // ============================================================
-    const voiceAudio    = document.getElementById('voiceAudio');
-    const voicePlayBtn  = document.getElementById('voicePlayBtn');
+    const voiceAudio = document.getElementById('voiceAudio');
+    const voicePlayBtn = document.getElementById('voicePlayBtn');
     const voiceProgress = document.getElementById('voiceProgress');
-    const voiceTime     = document.getElementById('voiceTime');
-    const leftReel      = document.getElementById('leftReel');
-    const rightReel     = document.getElementById('rightReel');
+    const voiceTime = document.getElementById('voiceTime');
+    const leftReel = document.getElementById('leftReel');
+    const rightReel = document.getElementById('rightReel');
 
     let voicePlaying = false;
 
-    window.toggleVoice = function() {
+    window.toggleVoice = function () {
         if (voicePlaying) {
             voiceAudio.pause();
             voicePlayBtn.textContent = '▶ เล่น';
@@ -736,7 +736,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             voiceAudio.play().catch(() => {
                 // No audio file — show fallback
-                voicePlayBtn.textContent = '💕 ขอบคุณที่กดนะ!';
+                voicePlayBtn.textContent = '💕 ขอบคุณที่กดนะคะ!';
                 leftReel.classList.add('spinning');
                 rightReel.classList.add('spinning');
                 setTimeout(() => {
@@ -774,16 +774,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     // 14. DAY / NIGHT THEME TOGGLE + STARFIELD
     // ============================================================
-    const nightBtn   = document.getElementById('nightBtn');
+    const nightBtn = document.getElementById('nightBtn');
     const starCanvas = document.getElementById('starCanvas');
-    const starCtx    = starCanvas.getContext('2d');
+    const starCtx = starCanvas.getContext('2d');
 
-    let isNight  = false;
-    let stars    = [];
+    let isNight = false;
+    let stars = [];
     let starAnim = null;
 
     function initStars() {
-        starCanvas.width  = window.innerWidth;
+        starCanvas.width = window.innerWidth;
         starCanvas.height = window.innerHeight;
         stars = [];
         for (let i = 0; i < 200; i++) {
@@ -793,7 +793,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 r: Math.random() * 2.5 + 0.5,
                 alpha: Math.random(),
                 dAlpha: (Math.random() * 0.01 + 0.003) * (Math.random() > 0.5 ? 1 : -1),
-                color: ['#ffffff','#ffe4ff','#ffd6ff','#ccaaff'][Math.floor(Math.random() * 4)],
+                color: ['#ffffff', '#ffe4ff', '#ffd6ff', '#ccaaff'][Math.floor(Math.random() * 4)],
             });
         }
     }
@@ -805,9 +805,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (s.alpha <= 0 || s.alpha >= 1) s.dAlpha *= -1;
             starCtx.save();
             starCtx.globalAlpha = Math.max(0, Math.min(1, s.alpha));
-            starCtx.fillStyle   = s.color;
+            starCtx.fillStyle = s.color;
             starCtx.shadowColor = s.color;
-            starCtx.shadowBlur  = 6;
+            starCtx.shadowBlur = 6;
             starCtx.beginPath();
             starCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
             starCtx.fill();
@@ -837,21 +837,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     // 15. EASTER EGGS
     // ============================================================
-    const eggs      = document.querySelectorAll('.easter-egg');
-    const eggModal  = document.getElementById('easterEggModal');
-    const eggEmoji  = document.getElementById('easterEmoji');
-    const eggTitle  = document.getElementById('easterTitle');
-    const eggText   = document.getElementById('easterText');
+    const eggs = document.querySelectorAll('.easter-egg');
+    const eggModal = document.getElementById('easterEggModal');
+    const eggEmoji = document.getElementById('easterEmoji');
+    const eggTitle = document.getElementById('easterTitle');
+    const eggText = document.getElementById('easterText');
 
     eggs.forEach(egg => {
         egg.addEventListener('click', (e) => {
             e.stopPropagation();
             eggEmoji.textContent = egg.dataset.emoji || '💕';
-            eggTitle.textContent = egg.dataset.title  || 'เจอของซ่อนแล้ว!';
-            eggText.textContent  = egg.dataset.text   || 'แอบบอกรัก...';
+            eggTitle.textContent = egg.dataset.title || 'แอบกดอะไยซน!';
+            eggText.textContent = egg.dataset.text || 'แอบบอกรัก...';
             eggModal.classList.remove('hidden');
 
-            confetti({ particleCount: 50, spread: 70, origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight }, colors: ['#ff4081','#ffd740','#ea80fc'] });
+            confetti({ particleCount: 50, spread: 70, origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight }, colors: ['#ff4081', '#ffd740', '#ea80fc'] });
         });
     });
 
@@ -871,7 +871,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.timeline-polaroid').forEach(p => {
         p.addEventListener('click', () => {
             p.style.transition = 'transform 0.15s ease';
-            p.style.transform  = 'rotate(0deg) scale(1.12)';
+            p.style.transform = 'rotate(0deg) scale(1.12)';
             setTimeout(() => {
                 p.style.transform = '';
                 p.style.transition = '';
@@ -879,14 +879,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // Mini heart burst
             const rect = p.getBoundingClientRect();
             const cx = rect.left + rect.width / 2;
-            const cy = rect.top  + rect.height / 2;
+            const cy = rect.top + rect.height / 2;
             for (let i = 0; i < 6; i++) {
                 setTimeout(() => {
                     const h = document.createElement('div');
                     h.classList.add('floating-heart');
-                    h.textContent = ['💕','💖','✨','🌸'][Math.floor(Math.random() * 4)];
-                    h.style.left     = cx + 'px';
-                    h.style.top      = cy + 'px';
+                    h.textContent = ['💕', '💖', '✨', '🌸'][Math.floor(Math.random() * 4)];
+                    h.style.left = cx + 'px';
+                    h.style.top = cy + 'px';
                     h.style.fontSize = `${Math.random() * 0.8 + 1}rem`;
                     document.body.appendChild(h);
                     setTimeout(() => h.remove(), 1500);
