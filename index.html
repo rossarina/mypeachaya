@@ -351,6 +351,125 @@
                     </div>
             </section>
 
+            <!-- ── Section 7: Birthday Cake (Blow-out Candles) ── -->
+            <section class="section section-cake" id="sectionCake">
+                <div class="section-inner">
+                    <div class="section-badge">🎂</div>
+                    <h2 class="section-title">เป่าเทียนวันเกิดด้วยกันนะ!</h2>
+                    <p class="section-sub">กดเทียนทีละเล่มเพื่อดับ 🕯️</p>
+
+                    <div class="cake-scene" id="cakeScene">
+                        <div class="cake-candles" id="cakeCandles">
+                            <div class="candle" data-id="0">
+                                <div class="flame" id="flame0"></div>
+                                <div class="candle-body"></div>
+                                <div class="candle-base"></div>
+                            </div>
+                            <div class="candle" data-id="1">
+                                <div class="flame" id="flame1"></div>
+                                <div class="candle-body"></div>
+                                <div class="candle-base"></div>
+                            </div>
+                            <div class="candle" data-id="2">
+                                <div class="flame" id="flame2"></div>
+                                <div class="candle-body"></div>
+                                <div class="candle-base"></div>
+                            </div>
+                            <div class="candle" data-id="3">
+                                <div class="flame" id="flame3"></div>
+                                <div class="candle-body"></div>
+                                <div class="candle-base"></div>
+                            </div>
+                            <div class="candle" data-id="4">
+                                <div class="flame" id="flame4"></div>
+                                <div class="candle-body"></div>
+                                <div class="candle-base"></div>
+                            </div>
+                        </div>
+                        <div class="cake-body">
+                            <div class="cake-top-layer">
+                                <div class="cake-frosting"></div>
+                                <div class="cake-drip d1"></div>
+                                <div class="cake-drip d2"></div>
+                                <div class="cake-drip d3"></div>
+                                <div class="cake-drip d4"></div>
+                            </div>
+                            <div class="cake-middle-layer"></div>
+                            <div class="cake-bottom-layer"></div>
+                        </div>
+                        <div class="cake-plate"></div>
+                    </div>
+
+                    <div class="cake-status" id="cakeStatus">🕯️ กดเทียนเพื่อดับ! (<span id="candlesLeft">5</span> เล่มที่เหลือ)</div>
+                    <div class="cake-win hidden" id="cakeWin">
+                        <div class="cake-win-emoji">🎉🎂🎉</div>
+                        <p class="cake-win-text">เป่าครบแล้ว! ขอให้ความปรารถนาเป็นจริงนะคะ 💕<br>Happy Birthday อ้วน! 🥳</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Section 8: Love Letter Unfold ── -->
+            <section class="section section-letter" id="sectionLetter">
+                <div class="section-inner">
+                    <div class="section-badge">💌</div>
+                    <h2 class="section-title">จดหมายจากใจ</h2>
+                    <p class="section-sub">คลิกเพื่อเปิดจดหมาย 💝</p>
+
+                    <div class="letter-wrapper" id="letterWrapper">
+                        <div class="letter-envelope" id="letterEnvelope">
+                            <div class="envelope-flap" id="envelopeFlap"></div>
+                            <div class="envelope-body">
+                                <div class="envelope-heart">💌</div>
+                                <div class="envelope-text">คลิกเพื่อเปิด</div>
+                            </div>
+                        </div>
+                        <div class="letter-paper hidden" id="letterPaper">
+                            <div class="letter-butterfly b1">🦋</div>
+                            <div class="letter-butterfly b2">🦋</div>
+                            <div class="letter-butterfly b3">🌸</div>
+                            <div class="letter-header">💕 ถึง คิม 💕</div>
+                            <div class="letter-body" id="letterBody"></div>
+                            <div class="letter-footer">ด้วยรัก, อ้วน 🥰</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Section 9: Interactive Heart Fill ── -->
+            <section class="section section-heart-fill" id="sectionHeartFill">
+                <div class="section-inner">
+                    <div class="section-badge">💝</div>
+                    <h2 class="section-title">หัวใจของเรา</h2>
+                    <p class="section-sub">กดเพื่อเติมความรัก 💕</p>
+
+                    <div class="heart-fill-container">
+                        <div class="heart-fill-wrap" id="heartFillWrap">
+                            <svg class="heart-svg" id="heartSvg" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <clipPath id="heartClip">
+                                        <path d="M100,160 C100,160 20,110 20,60 C20,35 40,20 60,20 C75,20 90,30 100,45 C110,30 125,20 140,20 C160,20 180,35 180,60 C180,110 100,160 100,160 Z"/>
+                                    </clipPath>
+                                    <linearGradient id="heartGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#ff4081"/>
+                                        <stop offset="50%" stop-color="#f50057"/>
+                                        <stop offset="100%" stop-color="#ff80ab"/>
+                                    </linearGradient>
+                                </defs>
+                                <!-- Heart outline -->
+                                <path class="heart-outline" d="M100,160 C100,160 20,110 20,60 C20,35 40,20 60,20 C75,20 90,30 100,45 C110,30 125,20 140,20 C160,20 180,35 180,60 C180,110 100,160 100,160 Z"/>
+                                <!-- Fill bar (clip inside heart) -->
+                                <rect id="heartFillRect" x="0" y="180" width="200" height="180" clip-path="url(#heartClip)" class="heart-fill-bar"/>
+                                <!-- Shine -->
+                                <ellipse cx="70" cy="55" rx="18" ry="10" class="heart-shine"/>
+                            </svg>
+                            <div class="heart-percent" id="heartPercent">0%</div>
+                        </div>
+                        <button class="heart-love-btn" id="heartLoveBtn">💖 กดเพื่อรัก!</button>
+                        <p class="heart-note" id="heartNote">กดเพิ่มความรักเข้าไปเรื่อยๆ นะ~ 🥰</p>
+                    </div>
+                </div>
+            </section>
+
         </div><!-- /secretSections -->
 
     </div><!-- /page-wrapper -->
@@ -358,6 +477,17 @@
     <!-- ============================================================
          MODALS & OVERLAYS
     ============================================================ -->
+
+    <!-- Photo Lightbox Overlay -->
+    <div class="lightbox-overlay hidden" id="lightboxOverlay">
+        <button class="lightbox-close" id="lightboxClose">✕</button>
+        <button class="lightbox-prev" id="lightboxPrev">‹</button>
+        <button class="lightbox-next" id="lightboxNext">›</button>
+        <div class="lightbox-img-wrap">
+            <div class="lightbox-img" id="lightboxImg"></div>
+        </div>
+        <div class="lightbox-counter" id="lightboxCounter">1 / 37</div>
+    </div>
 
     <!-- Love Win Modal -->
     <div class="modal-overlay hidden" id="loveWinModal">
@@ -395,7 +525,16 @@
          UI CONTROLS (top-right corner)
     ============================================================ -->
     <div class="ui-controls">
-        <button class="ctrl-btn" id="musicBtn" title="เปิด/ปิดเพลง">🔇</button>
+        <div class="ctrl-btn-wrap" id="musicBtnWrap">
+            <button class="ctrl-btn" id="musicBtn" title="เปิด/ปิดเพลง">🔇</button>
+            <div class="music-visualizer" id="musicVisualizer">
+                <div class="viz-bar"></div>
+                <div class="viz-bar"></div>
+                <div class="viz-bar"></div>
+                <div class="viz-bar"></div>
+                <div class="viz-bar"></div>
+            </div>
+        </div>
         <button class="ctrl-btn" id="confettiBtn" title="ยิงพลุ!">🎉</button>
         <button class="ctrl-btn" id="nightBtn" title="เปลี่ยนธีม">🌙</button>
     </div>

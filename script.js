@@ -349,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     const clickEmojis = ['💖', '✨', '🌸', '💕', '⭐', '🦋', '🌟', '💫'];
     document.body.addEventListener('pointerdown', e => {
-        if (e.target.closest('.gift-box, .floating-photo, .ctrl-btn, .love-btn, .balloon, button, canvas, .easter-egg, .modal-overlay, .quiz-overlay, .cassette-tape, .gacha-machine, .scratch-container')) return;
+        if (e.target.closest('.gift-box, .floating-photo, .ctrl-btn, .ctrl-btn-wrap, .love-btn, .balloon, button, canvas, .easter-egg, .modal-overlay, .quiz-overlay, .cassette-tape, .gacha-machine, .scratch-container, .candle, .letter-envelope, .lightbox-overlay, .heart-fill-wrap')) return;
         const el = document.createElement('div');
         el.classList.add('floating-heart');
         el.textContent = clickEmojis[Math.floor(Math.random() * clickEmojis.length)];
@@ -906,6 +906,335 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+
+    // ============================================================
+    // 17. PHOTO LIGHTBOX — Click floating photos to zoom
+    // ============================================================
+    const lightboxOverlay = document.getElementById('lightboxOverlay');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const lightboxPrev = document.getElementById('lightboxPrev');
+    const lightboxNext = document.getElementById('lightboxNext');
+    const lightboxCounter = document.getElementById('lightboxCounter');
+    const allPhotos = document.querySelectorAll('.floating-photo');
+    let lightboxIndex = 0;
+
+    function openLightbox(idx) {
+        lightboxIndex = ((idx % allPhotos.length) + allPhotos.length) % allPhotos.length;
+        const bg = allPhotos[lightboxIndex].style.backgroundImage;
+        lightboxImg.style.backgroundImage = bg;
+        lightboxCounter.textContent = `${lightboxIndex + 1} / ${allPhotos.length}`;
+        lightboxOverlay.classList.remove('hidden');
+        // Refresh pop animation
+        lightboxImg.style.animation = 'none';
+        void lightboxImg.offsetWidth;
+        lightboxImg.style.animation = 'lightboxPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        lightboxOverlay.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    allPhotos.forEach((photo, idx) => {
+        photo.addEventListener('dblclick', (e) => {
+            e.stopPropagation();
+            openLightbox(idx);
+        });
+        // On mobile: long-press to open
+        let pressTimer;
+        photo.addEventListener('pointerdown', (e) => {
+            pressTimer = setTimeout(() => { openLightbox(idx); }, 600);
+        });
+        photo.addEventListener('pointerup', () => clearTimeout(pressTimer));
+        photo.addEventListener('pointermove', () => clearTimeout(pressTimer));
+    });
+
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightboxOverlay.addEventListener('click', (e) => { if (e.target === lightboxOverlay) closeLightbox(); });
+    lightboxPrev.addEventListener('click', () => openLightbox(lightboxIndex - 1));
+    lightboxNext.addEventListener('click', () => openLightbox(lightboxIndex + 1));
+
+    document.addEventListener('keydown', (e) => {
+        if (lightboxOverlay.classList.contains('hidden')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') openLightbox(lightboxIndex - 1);
+        if (e.key === 'ArrowRight') openLightbox(lightboxIndex + 1);
+    });
+
+
+    // ============================================================
+    // 18. BIRTHDAY CAKE — Blow-out Candles
+    // ============================================================
+    const candles = document.querySelectorAll('.candle');
+    const candlesLeftEl = document.getElementById('candlesLeft');
+    const cakeWin = document.getElementById('cakeWin');
+    const cakeStatus = document.getElementById('cakeStatus');
+    let candlesBlown = 0;
+    const totalCandles = candles.length;
+
+    candles.forEach((candle) => {
+        candle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (candle.classList.contains('blown')) return;
+
+            candle.classList.add('blown');
+            candlesBlown++;
+
+            // Spawn smoke puffs
+            const flame = candle.querySelector('.flame');
+            const rect = flame.getBoundingClientRect();
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const smoke = document.createElement('div');
+                    smoke.classList.add('smoke-puff');
+                    smoke.style.position = 'fixed';
+                    smoke.style.left = (rect.left + rect.width / 2 + (Math.random() - 0.5) * 10) + 'px';
+                    smoke.style.top = (rect.top + (Math.random() - 0.5) * 5) + 'px';
+                    smoke.style.zIndex = '9998';
+                    document.body.appendChild(smoke);
+                    setTimeout(() => smoke.remove(), 700);
+                }, i * 120);
+            }
+
+            // Mini confetti burst
+            confetti({
+                particleCount: 20,
+                spread: 40,
+                origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight },
+                colors: ['#ff4081', '#ffd740', '#ea80fc'],
+                scalar: 0.6,
+                ticks: 40
+            });
+
+            const left = totalCandles - candlesBlown;
+            if (candlesLeftEl) candlesLeftEl.textContent = left;
+
+            if (candlesBlown >= totalCandles) {
+                // All blown!
+                setTimeout(() => {
+                    cakeStatus.classList.add('hidden');
+                    cakeWin.classList.remove('hidden');
+                    fireConfetti();
+                    fireLoveHearts();
+                }, 400);
+            } else {
+                cakeStatus.textContent = `🕯️ กดเทียนเพื่อดับ! (${left} เล่มที่เหลือ)`;
+            }
+        });
+    });
+
+
+    // ============================================================
+    // 19. LOVE LETTER UNFOLD
+    // ============================================================
+    const letterEnvelope = document.getElementById('letterEnvelope');
+    const letterPaper = document.getElementById('letterPaper');
+    const letterBody = document.getElementById('letterBody');
+    let letterOpened = false;
+
+    const LETTER_TEXT = `คิมที่รักเลย~ 💕
+
+วันนี้วันเกิดของคนที่น่ารักที่สุดในจักรวาล!
+ขอให้คิมมีความสุขมากๆ นะคะ 🥰
+
+อยู่ด้วยกันมาได้ระยะหนึ่งแล้ว
+ทุกวันที่มีคิมมันพิเศษมากเลยจริงๆ 💝
+
+ขอบคุณที่เป็นคนที่น่ารักแบบนี้นะคะ
+ขอให้เราอยู่ด้วยกันนานๆ
+รักคิมหมดหัวใจเลยยยย ✨`;
+
+    function typewriterLetter(el, text, speed = 30) {
+        el.textContent = '';
+        let i = 0;
+        const chars = text.split('');
+        const interval = setInterval(() => {
+            if (i < chars.length) {
+                el.textContent += chars[i++];
+            } else {
+                clearInterval(interval);
+            }
+        }, speed);
+    }
+
+    if (letterEnvelope) {
+        letterEnvelope.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (letterOpened) return;
+            letterOpened = true;
+
+            // Flip flap open animation
+            letterEnvelope.classList.add('open');
+
+            // Spawn flying butterflies
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const bt = document.createElement('div');
+                    bt.classList.add('floating-heart');
+                    bt.textContent = ['🦋', '🌸', '💕', '✨'][Math.floor(Math.random() * 4)];
+                    const rect = letterEnvelope.getBoundingClientRect();
+                    bt.style.left = (rect.left + Math.random() * rect.width) + 'px';
+                    bt.style.top = (rect.top + Math.random() * rect.height) + 'px';
+                    bt.style.fontSize = `${Math.random() * 1 + 1}rem`;
+                    document.body.appendChild(bt);
+                    setTimeout(() => bt.remove(), 1500);
+                }, i * 100);
+            }
+
+            // Slide envelope away then show paper
+            setTimeout(() => {
+                letterEnvelope.classList.add('opening');
+                setTimeout(() => {
+                    letterEnvelope.style.display = 'none';
+                    letterPaper.classList.remove('hidden');
+                    typewriterLetter(letterBody, LETTER_TEXT, 28);
+
+                    // Mini confetti
+                    confetti({
+                        particleCount: 60,
+                        spread: 80,
+                        origin: { y: 0.5 },
+                        colors: ['#ff4081', '#ffd740', '#ea80fc', '#ff80ab']
+                    });
+                }, 600);
+            }, 600);
+        });
+    }
+
+
+    // ============================================================
+    // 20. MUSIC VISUALIZER — toggle active class
+    // ============================================================
+    const musicBtnWrap = document.getElementById('musicBtnWrap');
+
+    // Override music toggle to also control visualizer
+    const origMusicBtn = document.getElementById('musicBtn');
+    origMusicBtn.addEventListener('click', () => {
+        // musicPlaying is toggled in handler #7, we just sync the class
+        setTimeout(() => {
+            if (musicPlaying) {
+                musicBtnWrap.classList.add('music-playing');
+            } else {
+                musicBtnWrap.classList.remove('music-playing');
+            }
+        }, 50);
+    });
+
+    // Sync when music plays from gift box click
+    bgMusic.addEventListener('play', () => musicBtnWrap.classList.add('music-playing'));
+    bgMusic.addEventListener('pause', () => musicBtnWrap.classList.remove('music-playing'));
+
+
+    // ============================================================
+    // 21. SHAKE TO CONFETTI (Mobile DeviceMotion)
+    // ============================================================
+    let lastShakeTime = 0;
+    let lastAcc = { x: 0, y: 0, z: 0 };
+
+    window.addEventListener('devicemotion', (e) => {
+        const acc = e.accelerationIncludingGravity;
+        if (!acc) return;
+        const now = Date.now();
+        if (now - lastShakeTime < 1000) return;
+
+        const deltaX = Math.abs(acc.x - lastAcc.x);
+        const deltaY = Math.abs(acc.y - lastAcc.y);
+        const deltaZ = Math.abs(acc.z - lastAcc.z);
+
+        if (deltaX + deltaY + deltaZ > 30) {
+            lastShakeTime = now;
+            fireConfetti();
+            // Show toast
+            const toast = document.createElement('div');
+            toast.style.cssText = `position:fixed;top:80px;left:50%;transform:translateX(-50%);background:rgba(255,64,129,0.9);color:white;padding:12px 24px;border-radius:50px;font-family:'Kanit',sans-serif;font-size:1rem;font-weight:700;z-index:9999;pointer-events:none;animation:floatUpHeart 2.5s ease-out forwards;white-space:nowrap;`;
+            toast.textContent = '📱 เขย่าเก่งมาก! 🎉';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+        lastAcc = { x: acc.x || 0, y: acc.y || 0, z: acc.z || 0 };
+    });
+
+    // Request permission on iOS 13+
+    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+        document.getElementById('confettiBtn').addEventListener('click', () => {
+            DeviceMotionEvent.requestPermission().catch(() => {});
+        }, { once: true });
+    }
+
+
+    // ============================================================
+    // 22. INTERACTIVE HEART FILL
+    // ============================================================
+    const heartLoveBtn = document.getElementById('heartLoveBtn');
+    const heartPercent = document.getElementById('heartPercent');
+    const heartFillRect = document.getElementById('heartFillRect');
+    const heartSvg = document.getElementById('heartSvg');
+    const heartNote = document.getElementById('heartNote');
+
+    const heartMessages = [
+        '🥰 ยิ่งกดยิ่งรัก!',
+        '💕 ความรักเพิ่มขึ้นๆ!',
+        '💖 หัวใจเต้นแรงขึ้น!',
+        '🌸 น่ารักมากเลยคิม!',
+        '✨ เกือบเต็มแล้ว!',
+        '💝 รักคิมที่สุดในโลก!'
+    ];
+
+    let heartLevel = 0; // 0 to 100
+    const HEART_STEP = 10;
+
+    function updateHeart(level) {
+        // heartFillRect: y goes from 180 (empty) to 0 (full), height stays 180
+        // So y = 180 - (level/100)*180
+        const fillY = 180 - (level / 100) * 180;
+        heartFillRect.setAttribute('y', fillY);
+        heartPercent.textContent = level + '%';
+
+        if (level >= 100) {
+            heartPercent.textContent = '100% 💖';
+            heartNote.textContent = '💖 เต็มแล้ว!! รักคิมมากที่สุดเลยยย! 🥳';
+            heartLoveBtn.textContent = '💞 รักเต็มหัวใจแล้ว!';
+            heartLoveBtn.disabled = true;
+            heartSvg.classList.add('heart-full-burst');
+            setTimeout(() => heartSvg.classList.remove('heart-full-burst'), 600);
+            fireConfetti();
+            fireLoveHearts();
+        } else {
+            const msgIdx = Math.min(Math.floor(level / 20), heartMessages.length - 1);
+            heartNote.textContent = heartMessages[msgIdx];
+        }
+    }
+
+    if (heartLoveBtn) {
+        heartLoveBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (heartLevel >= 100) return;
+            heartLevel = Math.min(100, heartLevel + HEART_STEP);
+            updateHeart(heartLevel);
+
+            // Pulse the button
+            heartLoveBtn.style.transform = 'scale(0.92)';
+            setTimeout(() => { heartLoveBtn.style.transform = ''; }, 150);
+
+            // Emit hearts from button
+            const rect = heartLoveBtn.getBoundingClientRect();
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const h = document.createElement('div');
+                    h.classList.add('floating-heart');
+                    h.textContent = ['💖', '💕', '🌸', '✨'][Math.floor(Math.random() * 4)];
+                    h.style.left = (rect.left + Math.random() * rect.width) + 'px';
+                    h.style.top = rect.top + 'px';
+                    h.style.fontSize = `${Math.random() * 0.8 + 0.9}rem`;
+                    document.body.appendChild(h);
+                    setTimeout(() => h.remove(), 1500);
+                }, i * 60);
+            }
+        });
+    }
 
 
 }); // end DOMContentLoaded
