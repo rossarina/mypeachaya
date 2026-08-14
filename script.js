@@ -20,9 +20,7 @@ const COUPONS = [
     { icon: '🎬', text: 'คูปองดูหนังด้วยกัน\n(เลือกเรื่องเองได้เลย!)' },
     { icon: '🍰', text: 'คูปองซื้อของหวานให้\n(เค้ก ไอศกรีม บิงซู เลือกได้เลย!)' },
     { icon: '🤗', text: 'คูปองกอดพิเศษ 1 ครั้ง\n(กอดแน่นๆ นานเท่าที่อยากได้!)' },
-    { icon: '📸', text: 'คูปองถ่ายรูปคู่ให้หน่อย\n(จัดมุมสวยๆ ไม่บ่น สัญญา!)' },
-    { icon: '🌙', text: 'คูปองคุยโทรศัพท์คืนนี้\n(คุยถึงกี่ทุ่มก็ได้ จะไม่โวย~)' },
-    { icon: '🛍️', text: 'คูปองช้อปปิ้งด้วยกัน\n(ตามใจ ซื้ออะไรก็ได้ 1 อย่าง!)' },
+
 ];
 
 // ============================================================
@@ -671,7 +669,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', initScratch);
 
     // Public re-init function (called when scratch section first becomes visible)
-    window.reinitScratch = function() {
+    window.reinitScratch = function () {
         scratchCtx.globalCompositeOperation = 'source-over';
         initScratch();
         scratchCtx.globalCompositeOperation = 'destination-out';
@@ -1051,16 +1049,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const letterBody = document.getElementById('letterBody');
     let letterOpened = false;
 
-    const LETTER_TEXT = `คิมที่รักเลย~ 💕
+    const LETTER_TEXT = `คุณคิม~ 💕
 
 วันนี้วันเกิดของคนที่น่ารักที่สุดในจักรวาล!
 ขอให้คิมมีความสุขมากๆ นะคะ 🥰
 
-อยู่ด้วยกันมาได้ระยะหนึ่งแล้ว
+ปีนี้ก็ปีที่สองที่ได้อยู่กับคิมตอนวันเกิด
 ทุกวันที่มีคิมมันพิเศษมากเลยจริงๆ 💝
 
 ขอบคุณที่เป็นคนที่น่ารักแบบนี้นะคะ
-ขอให้เราอยู่ด้วยกันนานๆ
+ขอให้เราอยู่ด้วยกันไปเรื่อยๆนะคะ
 รักคิมหมดหัวใจเลยยยย ✨`;
 
     function typewriterLetter(el, text, speed = 30) {
@@ -1171,8 +1169,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Request permission on iOS 13+
     if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
         document.getElementById('confettiBtn').addEventListener('click', () => {
-            DeviceMotionEvent.requestPermission().catch(() => {});
+            DeviceMotionEvent.requestPermission().catch(() => { });
         }, { once: true });
     }
-}); // end DOMContentLoaded
 
+
+}); // end DOMContentLoaded
