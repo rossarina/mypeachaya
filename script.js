@@ -338,9 +338,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     musicBtn.addEventListener('click', e => {
         e.stopPropagation();
-        if (musicPlaying) { bgMusic.pause(); musicBtn.textContent = '🔇'; }
-        else { bgMusic.volume = 0.3; bgMusic.play().catch(() => { }); musicBtn.textContent = '🎵'; }
-        musicPlaying = !musicPlaying;
+        if (musicPlaying) {
+            bgMusic.pause();
+        } else {
+            bgMusic.volume = 0.3;
+            bgMusic.play().catch(() => { });
+        }
     });
 
 
@@ -742,36 +745,40 @@ document.addEventListener('DOMContentLoaded', () => {
     window.toggleVoice = function () {
         if (voicePlaying) {
             voiceAudio.pause();
-            voicePlayBtn.textContent = '▶ เล่น';
-            leftReel.classList.remove('spinning');
-            rightReel.classList.remove('spinning');
         } else {
-            voiceAudio.play().catch(() => {
-                // No audio file — show fallback
+            // When voice note starts, pause background music if it is playing
+            if (musicPlaying) {
+                bgMusic.pause();
+            }
+            voiceAudio.play().catch((err) => {
+                console.error("Voice playback failed:", err);
+                // No audio file or failed — show fallback
                 voicePlayBtn.textContent = '💕 ขอบคุณที่กดนะคะ!';
                 leftReel.classList.add('spinning');
                 rightReel.classList.add('spinning');
+                voicePlaying = true; // allow pausing
                 setTimeout(() => {
                     voicePlayBtn.textContent = '▶ เล่น';
                     leftReel.classList.remove('spinning');
                     rightReel.classList.remove('spinning');
+                    voicePlaying = false;
                 }, 3000);
-                return;
             });
-            voicePlayBtn.textContent = '⏸ หยุด';
-            leftReel.classList.add('spinning');
-            rightReel.classList.add('spinning');
         }
-        voicePlaying = !voicePlaying;
     };
 
-    voiceAudio.addEventListener('timeupdate', () => {
-        if (!voiceAudio.duration) return;
-        const pct = (voiceAudio.currentTime / voiceAudio.duration) * 100;
-        voiceProgress.style.width = pct + '%';
-        const m = Math.floor(voiceAudio.currentTime / 60);
-        const s = Math.floor(voiceAudio.currentTime % 60);
-        voiceTime.textContent = `${m}:${String(s).padStart(2, '0')}`;
+    voiceAudio.addEventListener('play', () => {
+        voicePlaying = true;
+        voicePlayBtn.textContent = '⏸ หยุด';
+        leftReel.classList.add('spinning');
+        rightReel.classList.add('spinning');
+    });
+
+    voiceAudio.addEventListener('pause', () => {
+        voicePlaying = false;
+        voicePlayBtn.textContent = '▶ เล่น';
+        leftReel.classList.remove('spinning');
+        rightReel.classList.remove('spinning');
     });
 
     voiceAudio.addEventListener('ended', () => {
@@ -780,6 +787,15 @@ document.addEventListener('DOMContentLoaded', () => {
         leftReel.classList.remove('spinning');
         rightReel.classList.remove('spinning');
         voiceProgress.style.width = '100%';
+    });
+
+    voiceAudio.addEventListener('timeupdate', () => {
+        if (!voiceAudio.duration) return;
+        const pct = (voiceAudio.currentTime / voiceAudio.duration) * 100;
+        voiceProgress.style.width = pct + '%';
+        const m = Math.floor(voiceAudio.currentTime / 60);
+        const s = Math.floor(voiceAudio.currentTime % 60);
+        voiceTime.textContent = `${m}:${String(s).padStart(2, '0')}`;
     });
 
 
@@ -1110,22 +1126,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     const musicBtnWrap = document.getElementById('musicBtnWrap');
 
-    // Override music toggle to also control visualizer
-    const origMusicBtn = document.getElementById('musicBtn');
-    origMusicBtn.addEventListener('click', () => {
-        // musicPlaying is toggled in handler #7, we just sync the class
-        setTimeout(() => {
-            if (musicPlaying) {
-                musicBtnWrap.classList.add('music-playing');
-            } else {
-                musicBtnWrap.classList.remove('music-playing');
-            }
-        }, 50);
+    // Sync when music plays/pauses from any source
+    bgMusic.addEventListener('play', () => {
+        musicBtnWrap.classList.add('music-playing');
+        musicPlaying = true;
+        musicBtn.textContent = '🎵';
     });
-
-    // Sync when music plays from gift box click
-    bgMusic.addEventListener('play', () => musicBtnWrap.classList.add('music-playing'));
-    bgMusic.addEventListener('pause', () => musicBtnWrap.classList.remove('music-playing'));
+    bgMusic.addEventListener('pause', () => {
+        musicBtnWrap.classList.remove('music-playing');
+        musicPlaying = false;
+        musicBtn.textContent = '🔇';
+    });
 
 
     // ============================================================

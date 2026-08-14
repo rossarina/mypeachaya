@@ -21,7 +21,7 @@
     <!-- Background Audio -->
     <audio id="bgMusic" src="assets/music/song.mp3" loop></audio>
     <!-- Voice Note Audio -->
-    <audio id="voiceAudio" src="assets/audio/voice.mp3"></audio>
+    <audio id="voiceAudio" src="assets/audio/voice.m4a"></audio>
 
     <!-- Balloon Container (populated by JS) -->
     <div id="balloon-container"></div>
@@ -218,7 +218,7 @@
                             <button class="gacha-save-btn hidden" id="gachaSaveBtn">📸 บันทึกคูปอง</button>
                         </div>
                     </div>
-                    <p class="gacha-note" id="gachaNote">💡 แลกรับคูปองในแชทเลยย</p>
+                    <p class="gacha-note" id="gachaNote">💡 แลกรับคูปองใช้ตอนอยู่ด้วยกันน้าาา</p>
                 </div>
             </section>
 
@@ -310,45 +310,45 @@
                                     <div class="polaroid-overlay">💕</div>
                                 </div>
                                 <div class="polaroid-caption">วันแรกที่เจอกันในนั่น</div>
-                                </div>
-                                <div class="timeline-content">
-                                    <div class="timeline-date">📅 วันที่เท่าไรม่ายรุ้</div>
-                                    <h3 class="timeline-heading">วันแรกที่รู้จักกันอีกครั้ง55555 👋</h3>
-                                    <p class="timeline-text">เขินมากตอนนั้น แต่เป็นความทรงจำที่ดีนะคะ🥰</p>
-                                </div>
                             </div>
-
-                            <div class="timeline-item right">
-                                <div class="timeline-polaroid">
-                                    <div class="polaroid-photo" style="background-image: url('assets/images/pic7.jpg')">
-                                        <div class="polaroid-overlay">💑</div>
-                                    </div>
-                                    <div class="polaroid-caption">วันที่เริ่มคบกัน</div>
-                                </div>
-                                <div class="timeline-content">
-                                    <div class="timeline-date">📅 1 กรกฎาคม 2568</div>
-                                    <h3 class="timeline-heading">วันที่เริ่มต้นทุกอย่าง 💕</h3>
-                                    <p class="timeline-text">เป็นวันที่เขินที่สุดในชีวิตแล้วใจจะหลุด
-                                        ❤️</p>
-                                </div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">📅 วันที่เท่าไรม่ายรุ้</div>
+                                <h3 class="timeline-heading">วันแรกที่รู้จักกันอีกครั้ง55555 👋</h3>
+                                <p class="timeline-text">เขินมากตอนนั้น แต่เป็นความทรงจำที่ดีนะคะ🥰</p>
                             </div>
+                        </div>
 
-                            <div class="timeline-item left">
-                                <div class="timeline-polaroid">
-                                    <div class="polaroid-photo" style="background-image: url('assets/images/pic3.jpg')">
-                                        <div class="polaroid-overlay">🎂</div>
-                                    </div>
-                                    <div class="polaroid-caption">วันเกิดครั้งนี้</div>
+                        <div class="timeline-item right">
+                            <div class="timeline-polaroid">
+                                <div class="polaroid-photo" style="background-image: url('assets/images/pic7.jpg')">
+                                    <div class="polaroid-overlay">💑</div>
                                 </div>
-                                <div class="timeline-content">
-                                    <div class="timeline-date">📅 15 สิงหาคม 2569</div>
-                                    <h3 class="timeline-heading">วันเกิดที่แสนพิเศษ 🎂</h3>
-                                    <p class="timeline-text">วันนี้วันเกิดของคนที่น่ารักที่สุด!
-                                        🎉</p>
+                                <div class="polaroid-caption">วันที่เริ่มคบกัน</div>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">📅 1 กรกฎาคม 2568</div>
+                                <h3 class="timeline-heading">วันที่เริ่มต้นทุกอย่าง 💕</h3>
+                                <p class="timeline-text">เป็นวันที่เขินที่สุดในชีวิตแล้วใจจะหลุด
+                                    ❤️</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item left">
+                            <div class="timeline-polaroid">
+                                <div class="polaroid-photo" style="background-image: url('assets/images/pic3.jpg')">
+                                    <div class="polaroid-overlay">🎂</div>
                                 </div>
+                                <div class="polaroid-caption">วันเกิดครั้งนี้</div>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">📅 15 สิงหาคม 2569</div>
+                                <h3 class="timeline-heading">วันเกิดที่แสนพิเศษ 🎂</h3>
+                                <p class="timeline-text">วันนี้วันเกิดของคนที่น่ารักที่สุด!
+                                    🎉</p>
                             </div>
                         </div>
                     </div>
+                </div>
             </section>
 
             <!-- ── Section 7: Birthday Cake (Blow-out Candles) ── -->
@@ -400,10 +400,13 @@
                         <div class="cake-plate"></div>
                     </div>
 
-                    <div class="cake-status" id="cakeStatus">🕯️ กดเทียนเพื่อดับ! (<span id="candlesLeft">5</span> เล่มที่เหลือ)</div>
+                    <div class="cake-status" id="cakeStatus">🕯️ กดเทียนอธิษฐานทีละเล่มนะคะ! (<span
+                            id="candlesLeft">5</span>
+                        เล่มที่เหลือ)</div>
                     <div class="cake-win hidden" id="cakeWin">
                         <div class="cake-win-emoji">🎉🎂🎉</div>
-                        <p class="cake-win-text">เป่าครบแล้ว! ขอให้ความปรารถนาเป็นจริงนะคะ 💕<br>Happy Birthday อ้วน! 🥳</p>
+                        <p class="cake-win-text">เป่าครบแล้ว! ขอให้ความปรารถนาเป็นจริงนะคะ 💕<br>Happy Birthday อ้วน! 🥳
+                        </p>
                     </div>
                 </div>
             </section>
@@ -444,23 +447,27 @@
 
                     <div class="heart-fill-container">
                         <div class="heart-fill-wrap" id="heartFillWrap">
-                            <svg class="heart-svg" id="heartSvg" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="heart-svg" id="heartSvg" viewBox="0 0 200 180"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <defs>
                                     <clipPath id="heartClip">
-                                        <path d="M100,160 C100,160 20,110 20,60 C20,35 40,20 60,20 C75,20 90,30 100,45 C110,30 125,20 140,20 C160,20 180,35 180,60 C180,110 100,160 100,160 Z"/>
+                                        <path
+                                            d="M100,160 C100,160 20,110 20,60 C20,35 40,20 60,20 C75,20 90,30 100,45 C110,30 125,20 140,20 C160,20 180,35 180,60 C180,110 100,160 100,160 Z" />
                                     </clipPath>
                                     <linearGradient id="heartGrad" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stop-color="#ff4081"/>
-                                        <stop offset="50%" stop-color="#f50057"/>
-                                        <stop offset="100%" stop-color="#ff80ab"/>
+                                        <stop offset="0%" stop-color="#ff4081" />
+                                        <stop offset="50%" stop-color="#f50057" />
+                                        <stop offset="100%" stop-color="#ff80ab" />
                                     </linearGradient>
                                 </defs>
                                 <!-- Heart outline -->
-                                <path class="heart-outline" d="M100,160 C100,160 20,110 20,60 C20,35 40,20 60,20 C75,20 90,30 100,45 C110,30 125,20 140,20 C160,20 180,35 180,60 C180,110 100,160 100,160 Z"/>
+                                <path class="heart-outline"
+                                    d="M100,160 C100,160 20,110 20,60 C20,35 40,20 60,20 C75,20 90,30 100,45 C110,30 125,20 140,20 C160,20 180,35 180,60 C180,110 100,160 100,160 Z" />
                                 <!-- Fill bar (clip inside heart) -->
-                                <rect id="heartFillRect" x="0" y="180" width="200" height="180" clip-path="url(#heartClip)" class="heart-fill-bar"/>
+                                <rect id="heartFillRect" x="0" y="180" width="200" height="180"
+                                    clip-path="url(#heartClip)" class="heart-fill-bar" />
                                 <!-- Shine -->
-                                <ellipse cx="70" cy="55" rx="18" ry="10" class="heart-shine"/>
+                                <ellipse cx="70" cy="55" rx="18" ry="10" class="heart-shine" />
                             </svg>
                             <div class="heart-percent" id="heartPercent">0%</div>
                         </div>
