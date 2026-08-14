@@ -490,35 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gachaNote = document.getElementById('gachaNote');
 
     let currentCoupon = null;
-
-    // Check daily limit
-    function getTodayKey() {
-        const d = new Date();
-        return `gacha_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
-    }
-
-    function hasDrawnToday() {
-        return !!localStorage.getItem(getTodayKey());
-    }
-
-    function markDrawnToday(couponIdx) {
-        localStorage.setItem(getTodayKey(), String(couponIdx));
-    }
-
-    function getTodayCouponIdx() {
-        return parseInt(localStorage.getItem(getTodayKey()) || '-1');
-    }
-
-    // Restore today's coupon if already drawn
-    const todayIdx = getTodayCouponIdx();
-    if (todayIdx >= 0 && todayIdx < COUPONS.length) {
-        currentCoupon = COUPONS[todayIdx];
-        showCouponResult(currentCoupon);
-        gachaBtn.disabled = true;
-        gachaBtn.textContent = '✅ สุ่มแล้ววันนี้!';
-        gachaSaveBtn.classList.remove('hidden');
-        gachaNote.textContent = '💡 สุ่มแล้ววันนี้! มาใหม่พรุ่งนี้นะ~ 🌸';
-    }
+    let isGachaSpinning = false;
 
     function showCouponResult(coupon) {
         gachaIdle.classList.add('hidden');
@@ -528,18 +500,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     gachaBtn.addEventListener('click', () => {
-        if (hasDrawnToday()) return;
+        if (isGachaSpinning) return;
+        isGachaSpinning = true;
 
-        // Animation phase
+        // Reset state
+        gachaResult.classList.add('hidden');
+        gachaIdle.classList.remove('hidden');
         gachaBtn.disabled = true;
-        gachaBall.classList.add('pop-out');
+        gachaBtn.textContent = '🎲 กำลังสุ่ม...';
         gachaBall.classList.remove('spinning');
+        gachaBall.classList.add('pop-out');
 
         setTimeout(() => {
             // Pick random coupon
             const idx = Math.floor(Math.random() * COUPONS.length);
             currentCoupon = COUPONS[idx];
-            markDrawnToday(idx);
 
             gachaBall.textContent = currentCoupon.icon;
             gachaBall.classList.remove('pop-out');
@@ -548,9 +523,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Show result after brief delay
             setTimeout(() => {
                 showCouponResult(currentCoupon);
-                gachaBtn.textContent = '✅ สุ่มแล้ววันนี้!';
                 gachaSaveBtn.classList.remove('hidden');
-                gachaNote.textContent = '💡 สุ่มแล้ววันนี้! มาใหม่พรุ่งนี้นะ~ 🌸';
+                gachaNote.textContent = '💡 กดสุ่มอีกได้เลยนะ~ 🎀';
+                gachaBtn.disabled = false;
+                gachaBtn.textContent = '🎰 สุ่มอีกครั้ง!';
+                isGachaSpinning = false;
 
                 confetti({ particleCount: 60, spread: 80, origin: { y: 0.5 }, colors: ['#ff4081', '#ffd740', '#ea80fc'] });
             }, 600);
